@@ -166,38 +166,41 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					float maxhealth = ents->MaxHealth;
 					if (maxhealth > 11 && maxhealth < 999) {
 						Vector3 pos = ents->pos;
-						Vector2 posscreen = PosToScreen(pos);
-						if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
-							DWORD64 EntityAddr = E.GetEntity(i);
-							Vector2 neck = GetBonePos(EntityAddr, _NECK_);
-							Vector2 head = GetBonePos(EntityAddr, _HEAD_);
-							Vector2 Rhand = GetBonePos(EntityAddr, _RIGHTHAND_);
-							Vector2 Lhand = GetBonePos(EntityAddr, _LEFTHAND_);
-							Vector2 stomach = GetBonePos(EntityAddr, _STOMACH_);
-							Vector2 Rfootback = GetBonePos(EntityAddr, _RIGHTFOOTBACK_);
-							Vector2 Lfootback = GetBonePos(EntityAddr, _LEFTFOOTBACK_);
-							Vector2 Rfootfront = GetBonePos(EntityAddr, _RIGHTFOOTFRONT_);
-							Vector2 Lfootfront = GetBonePos(EntityAddr, _LEFTFOOTFRONT_);
-							if (maxhealth > 11 && maxhealth < 201) {
-								DrawLine(neck, stomach, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-								DrawLine(neck, Rhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-								DrawLine(neck, Lhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-								DrawLine(stomach, Rfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-								DrawLine(stomach, Lfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-								DrawLine(Lfootback, Lfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-								DrawLine(Rfootback, Rfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-								ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.NPCBoneColor, 0, UserSettings.BoneThickness);
-							}
-							if (maxhealth > 201 && maxhealth < 999) {
+						if (local->pos.Distance(pos) < UserSettings.ESPDistance){
+							pos.z -= 1.0f;
+							Vector2 posscreen = PosToScreen(pos);
+							if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+								DWORD64 EntityAddr = E.GetEntity(i);
+								Vector2 neck = GetBonePos(EntityAddr, _NECK_);
+								Vector2 head = GetBonePos(EntityAddr, _HEAD_);
+								Vector2 Rhand = GetBonePos(EntityAddr, _RIGHTHAND_);
+								Vector2 Lhand = GetBonePos(EntityAddr, _LEFTHAND_);
+								Vector2 stomach = GetBonePos(EntityAddr, _STOMACH_);
+								Vector2 Rfootback = GetBonePos(EntityAddr, _RIGHTFOOTBACK_);
+								Vector2 Lfootback = GetBonePos(EntityAddr, _LEFTFOOTBACK_);
+								Vector2 Rfootfront = GetBonePos(EntityAddr, _RIGHTFOOTFRONT_);
+								Vector2 Lfootfront = GetBonePos(EntityAddr, _LEFTFOOTFRONT_);
+								if (maxhealth > 11 && maxhealth < 201) {
+									DrawLine(neck, stomach, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+									DrawLine(neck, Rhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+									DrawLine(neck, Lhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+									DrawLine(stomach, Rfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+									DrawLine(stomach, Lfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+									DrawLine(Lfootback, Lfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+									DrawLine(Rfootback, Rfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+									ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.NPCBoneColor, 0, UserSettings.BoneThickness);
+								}
+								if (maxhealth > 201 && maxhealth < 999) {
 
-								DrawLine(neck, stomach, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-								DrawLine(neck, Rhand, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-								DrawLine(neck, Lhand, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-								DrawLine(stomach, Rfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-								DrawLine(stomach, Lfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-								DrawLine(Lfootback, Lfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-								DrawLine(Rfootback, Rfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-								ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.PlayerBoneColor, 0, UserSettings.BoneThickness);
+									DrawLine(neck, stomach, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+									DrawLine(neck, Rhand, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+									DrawLine(neck, Lhand, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+									DrawLine(stomach, Rfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+									DrawLine(stomach, Lfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+									DrawLine(Lfootback, Lfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+									DrawLine(Rfootback, Rfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+									ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.PlayerBoneColor, 0, UserSettings.BoneThickness);
+								}
 							}
 						}
 					}
@@ -279,6 +282,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved) {
 			Process::Module = hModule;
 			StartFunc(hModule, (LPTHREAD_START_ROUTINE)MainThread);
 			StartFunc(hModule, (LPTHREAD_START_ROUTINE)InitiateHooks);
+			StartFunc(hModule, (LPTHREAD_START_ROUTINE)SetValues);
 		}
 		break;
 	case DLL_PROCESS_DETACH:
