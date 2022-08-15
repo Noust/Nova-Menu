@@ -5,11 +5,20 @@ bool ImGui_Initialised = false;
 
 
 void Colors() {
-	ImGuiStyle style = ImGui::GetStyle();
-	style.WindowTitleAlign = { 0.5f,0.5f };
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.WindowPadding = ImVec2(10, 10);
+	style.WindowRounding = 5.0f;
+	style.FramePadding = ImVec2(5, 5);
+	style.FrameRounding = 4.0f;
+	style.ItemSpacing = ImVec2(12, 8);
+	style.ItemInnerSpacing = ImVec2(8, 6);
+	style.IndentSpacing = 25.0f;
+	style.ScrollbarSize = 15.0f;
+	style.ScrollbarRounding = 9.0f;
+	style.GrabMinSize = 5.0f;
+	style.GrabRounding = 3.0f;
 	style.WindowMinSize = ImVec2(783, 508);
-	style.ChildRounding = 5;
-	style.WindowRounding = 5;
+	style.WindowTitleAlign = { 0.5,0.5f };
 }
 
 namespace Process {
@@ -68,8 +77,8 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui_Initialised = true;
 		}
 	}
-	Colors();
 	if (GetAsyncKeyState(VK_INSERT) & 1) ShowMenu = !ShowMenu;
+	Colors();
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
