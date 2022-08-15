@@ -1,8 +1,17 @@
 #include "Include.h"
-
+#define _HEAD_              0x796E
+#define _LEFTFOOTFRONT_     0xE175
+#define _RIGHTFOOTFRONT_	0x60E6
+#define _LEFTFOOTBACK_      0x3779
+#define _RIGHTFOOTBACK_     0xCC4D
+#define _LEFTHAND_	      0x49D9
+#define _RIGHTHAND_         0xDEAD
+#define _NECK_              0x9995
+#define _STOMACH_	       0x60F0
 bool ShowMenu = false;
 bool ImGui_Initialised = false;
 Entity E;
+DWORD64 BoneFunc;
 
 void Colors() {
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -21,15 +30,19 @@ void Colors() {
 	style.WindowTitleAlign = { 0.5,0.5f };
 }
 
+
 DWORD WINAPI InitiateHooks(HMODULE hMod) {
 	while (!hooked) {
 		char modulename[] = "GTA5.exe";
 		char sig[] = "\xF3\x0F\x00\x00\x00\x0F\x28\x00\x0F\x28\x00\x00\x0F\x28\x00\x00\xF3\x0F";
 		char mask[] = "xx???xx?xx??xx??xx";
+		char sig1[] = "\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8";
+		char mask1[] = "xxx????xx????x";
 		HookAddr = FindPattern(modulename, sig, mask);
+		BoneFunc = FindPattern(modulename, sig1, mask1);
 		int HookLength = 16;
 		jmpback = HookAddr + HookLength;
-		if (HookAddr != NULL) {
+		if (HookAddr != NULL && BoneFunc != NULL) {
 			Hook((BYTE*)HookAddr, (BYTE*)GetView, HookLength);
 			hooked = true;
 		}
@@ -38,6 +51,12 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 		Sleep(500);
 	}
 	FreeLibraryAndExitThread(hMod, 0);
+}
+
+Vector2 GetposBone(DWORD64 EntityAddr, DWORD mask) {
+	Vector4 TempVec;
+	reinterpret_cast<void* (__fastcall*)(DWORD64, Vector4*, DWORD)>(BoneFunc)(EntityAddr, &TempVec, mask);
+	return PosToScreen(TempVec);
 }
 
 namespace Process {
@@ -96,8 +115,8 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui_Initialised = true;
 		}
 	}
-	if (GetAsyncKeyState(VK_INSERT) & 1) ShowMenu = !ShowMenu;
 	Colors();
+	if (GetAsyncKeyState(VK_INSERT) & 1) ShowMenu = !ShowMenu;
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -116,32 +135,31 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		}
 		ImGui::EndChild;
 		ImGui::SameLine();
-		ImGui::BeginChild("##leftside", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), true);
-		if (UserSettings.MenuWindow == 0) {
-			ImGui::Checkbox("Box Esp", &UserSettings.BoxEsp);
-			if (UserSettings.BoxEsp) {
-				ImGui::ColorEdit4("Player Color", (float*)(&UserSettings.PlayerBoxColor));
-				ImGui::ColorEdit4("NPC Color", (float*)(&UserSettings.NPCBoxColor));
-				ImGui::SliderFloat("Box Width", &UserSettings.BoxWidth, 0, 1);
-				ImGui::Separator();
-			}
-			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
-		}
-		if (UserSettings.MenuWindow == 1) {
-
-		}
-		if (UserSettings.MenuWindow == 2) {
-
-		}
+		ImGui::BeginChild("##rigthside", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), true);
 		ImGui::EndChild;
 		ImGui::End;
 	}
 	if (hooked) {
-		if (UserSettings.BoxEsp) {
+		if (UserSettings.BoneEsp) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				DWORD64 EntityAddr = E.GetEntity(i);
 				if (EntityAddr != 0) {
-
+					Vector2 head = GetposBone(EntityAddr, _HEAD_);
+					Vector2 neck = GetposBone(EntityAddr, _NECK_);
+					Vector2 stomach = GetposBone(EntityAddr, _STOMACH_);
+					Vector2 Rhand = GetposBone(EntityAddr, _RIGHTHAND_);
+					Vector2 Lhand = GetposBone(EntityAddr, _LEFTHAND_);
+					Vector2 Rfootback = GetposBone(EntityAddr, _RIGHTFOOTBACK_);
+					Vector2 Lfootback = GetposBone(EntityAddr, _LEFTFOOTBACK_);
+					Vector2 Rfootfront = GetposBone(EntityAddr, _RIGHTFOOTFRONT_);
+					Vector2 Lfootfront = GetposBone(EntityAddr, _LEFTFOOTFRONT_);
+					DrawLine(neck, stomach, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+					DrawLine(neck, Rhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+					DrawLine(neck, Lhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+					DrawLine(stomach, Lfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+					DrawLine(stomach, Rfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+					DrawLine(Rfootback, Rfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+					DrawLine(Lfootback, Lfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
 				}
 			}
 		}
