@@ -79,6 +79,7 @@
     <ClInclude Include="Drawing.h" />
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="WorldToScreen.h" />
+    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Directories\MinHook\Src\buffer.c">

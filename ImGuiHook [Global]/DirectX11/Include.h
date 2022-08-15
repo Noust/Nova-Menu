@@ -10,6 +10,7 @@
 #include "../Directories/ImGui/imgui.h"
 #include "../Directories/ImGui/imgui_impl_dx11.h"
 #include "../Directories/ImGui/imgui_impl_win32.h"
+#include "Vector.h"
 
 #include "settings.h"
 #include "HookFunc.h"
