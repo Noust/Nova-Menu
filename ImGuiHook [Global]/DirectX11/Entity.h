@@ -3,5 +3,6 @@
 
 class Entity {
 public:
-
+	DWORD64 GetEntity(int index);
+	short GetMaxEntities();
 };

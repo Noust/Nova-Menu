@@ -2,7 +2,7 @@
 
 bool ShowMenu = false;
 bool ImGui_Initialised = false;
-
+Entity E;
 
 void Colors() {
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -138,7 +138,12 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	}
 	if (hooked) {
 		if (UserSettings.BoxEsp) {
+			for (int i = 0; i < E.GetMaxEntities(); i++) {
+				DWORD64 EntityAddr = E.GetEntity(i);
+				if (EntityAddr != 0) {
 
+				}
+			}
 		}
 	}
 	ImGui::EndFrame();
