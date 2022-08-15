@@ -13,3 +13,7 @@
 
 #include "settings.h"
 #include "HookFunc.h"
+#include "WorldToScreen.h"
+#include "Drawing.h"
+#include "Hooks.h"
+#include "Entity.h"

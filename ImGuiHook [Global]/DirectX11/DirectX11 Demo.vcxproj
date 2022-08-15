@@ -43,6 +43,7 @@
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="Include.h" />
     <ClInclude Include="settings.h" />
+    <ClInclude Include="WorldToScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Directories\ImGui\imgui.cpp" />
@@ -61,6 +62,7 @@
     <ClCompile Include="Drawing.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="HookFunc.cpp" />
+    <ClCompile Include="WOrldToScreen.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -78,6 +78,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Drawing.h" />
     <ClInclude Include="Hooks.h" />
+    <ClInclude Include="WorldToScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Directories\MinHook\Src\buffer.c">
@@ -122,5 +123,6 @@
     <ClCompile Include="HookFunc.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Drawing.cpp" />
+    <ClCompile Include="WOrldToScreen.cpp" />
   </ItemGroup>
 </Project>
