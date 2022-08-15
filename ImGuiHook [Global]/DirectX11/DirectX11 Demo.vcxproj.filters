@@ -75,6 +75,9 @@
     <ClInclude Include="Include.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="HookFunc.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Drawing.h" />
+    <ClInclude Include="Hooks.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Directories\MinHook\Src\buffer.c">
@@ -117,5 +120,7 @@
       <Filter>Demo Source</Filter>
     </ClCompile>
     <ClCompile Include="HookFunc.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Drawing.cpp" />
   </ItemGroup>
 </Project>

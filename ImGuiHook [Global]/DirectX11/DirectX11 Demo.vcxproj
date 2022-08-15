@@ -37,7 +37,10 @@
     <ClInclude Include="..\Global.h" />
     <ClInclude Include="DirectX11.h" />
     <ClInclude Include="DirectX11ImGui.h" />
+    <ClInclude Include="Drawing.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="HookFunc.h" />
+    <ClInclude Include="Hooks.h" />
     <ClInclude Include="Include.h" />
     <ClInclude Include="settings.h" />
   </ItemGroup>
@@ -55,6 +58,8 @@
     <ClCompile Include="..\Directories\MinHook\Src\hook.c" />
     <ClCompile Include="..\Directories\MinHook\Src\trampoline.c" />
     <ClCompile Include="DirectX11ImGui.cpp" />
+    <ClCompile Include="Drawing.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="HookFunc.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
