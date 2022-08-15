@@ -105,23 +105,41 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	if (ShowMenu == true) {
 		ImGui::Begin("Nova", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
 		ImGui::BeginChild("##leftside", ImVec2(200, ImGui::GetContentRegionAvail().y), true);
-		ImGui::Button("Visuals", ImVec2(ImGui::GetContentRegionAvail().x, 25));
-		ImGui::Button("Player", ImVec2(ImGui::GetContentRegionAvail().x, 25));
-		ImGui::Button("Teleport", ImVec2(ImGui::GetContentRegionAvail().x, 25));
+		if (ImGui::Button("Visuals", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+			UserSettings.MenuWindow = 0;
+		}
+		if (ImGui::Button("Player", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+			UserSettings.MenuWindow = 1;
+		}
+		if (ImGui::Button("Teleport", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+			UserSettings.MenuWindow = 2;
+		}
 		ImGui::EndChild;
 		ImGui::SameLine();
 		ImGui::BeginChild("##leftside", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), true);
-		if (UserSetings.MenuWindow == 0) {
+		if (UserSettings.MenuWindow == 0) {
+			ImGui::Checkbox("Box Esp", &UserSettings.BoxEsp);
+			if (UserSettings.BoxEsp) {
+				ImGui::ColorEdit4("Player Color", (float*)(&UserSettings.PlayerBoxColor));
+				ImGui::ColorEdit4("NPC Color", (float*)(&UserSettings.NPCBoxColor));
+				ImGui::SliderFloat("Box Width", &UserSettings.BoxWidth, 0, 1);
+				ImGui::Separator();
+			}
+			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
+		}
+		if (UserSettings.MenuWindow == 1) {
 
 		}
-		if (UserSetings.MenuWindow == 1) {
-
-		}
-		if (UserSetings.MenuWindow == 2) {
+		if (UserSettings.MenuWindow == 2) {
 
 		}
 		ImGui::EndChild;
 		ImGui::End;
+	}
+	if (hooked) {
+		if (UserSettings.BoxEsp) {
+
+		}
 	}
 	ImGui::EndFrame();
 	ImGui::Render();
