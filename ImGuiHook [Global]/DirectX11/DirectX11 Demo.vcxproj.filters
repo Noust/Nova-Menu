@@ -80,6 +80,7 @@
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="WorldToScreen.h" />
     <ClInclude Include="Vector.h" />
+    <ClInclude Include="MainCheats.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Directories\MinHook\Src\buffer.c">
@@ -125,5 +126,6 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Drawing.cpp" />
     <ClCompile Include="WOrldToScreen.cpp" />
+    <ClCompile Include="MainCheats.cpp" />
   </ItemGroup>
 </Project>

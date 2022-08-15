@@ -12,6 +12,7 @@ bool ShowMenu = false;
 bool ImGui_Initialised = false;
 Entity E;
 DWORD64 BoneFunc;
+char healths[50];
 
 void Colors() {
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -160,7 +161,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				DWORD64 EntityAddr = E.GetEntity(i);
 				if (EntityAddr != 0) {
-
+					ents = (Entitys*)(EntityAddr);
+					sprintf_s(healths, 50, "HP:%0.f",ents->Health);
+					ImGui::GetBackgroundDrawList()->AddText(ImVec2(100, 100), ImColor(255, 255, 255), healths);
 				}
 			}
 		}

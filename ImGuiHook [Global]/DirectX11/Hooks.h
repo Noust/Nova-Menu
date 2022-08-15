@@ -4,7 +4,7 @@ DWORD64 HookAddr;
 DWORD64 ViewAddr;
 DWORD64 jmpback;
 
-class Entity
+class Entitys
 {
 public:
 	char pad_0000[44]; //0x0000
@@ -154,6 +154,9 @@ public:
 	int32_t CurrentAmmo; //0x0018
 	char pad_001C[108]; //0x001C
 }; //Size: 0x0088
+
+Entitys* ents;
+Entitys* local;
 
 __declspec(naked) void GetView() {
 	__asm{
