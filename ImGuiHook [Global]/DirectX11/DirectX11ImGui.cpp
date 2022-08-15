@@ -8,8 +8,8 @@ void Colors() {
 	ImGuiStyle style = ImGui::GetStyle();
 	style.WindowTitleAlign = { 0.5f,0.5f };
 	style.WindowMinSize = ImVec2(783, 508);
-	style.ChildRounding = 0.5f;
-	style.WindowRounding = 0.5f;
+	style.ChildRounding = 5;
+	style.WindowRounding = 5;
 }
 
 namespace Process {
