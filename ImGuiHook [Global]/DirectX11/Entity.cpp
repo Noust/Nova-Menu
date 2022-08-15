@@ -7,5 +7,6 @@ DWORD64 Entity::GetEntity(int index) {
 	return 0;
 }
 short Entity::GetMaxEntities() {
-	return *(short*)((DWORD64)GetModuleHandleA("GTA5.exe") + (0x266DBC8 + (1 << 3)));
+	short maxents = *(short*)((DWORD64)GetModuleHandleA("GTA5.exe") + (0x266DBC8 + (1 << 3)));
+	return maxents - 1;
 }

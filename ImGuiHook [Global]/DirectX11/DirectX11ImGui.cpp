@@ -154,13 +154,14 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	if (hooked) {
 		if (UserSettings.BoxEsp) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
-				DWORD64 EntityAddr = E.GetEntity(i);
-				if (EntityAddr != 0) {
-					ents = (Entitys*)(0x25C4B3B5D40);
+				ents = (Entitys*)(E.GetEntity(i));
+				if (ents != nullptr) {
 					Vector3 pos = ents->pos;
 					Vector2 posscreen = PosToScreen(pos);
-					sprintf_s(healths, 50, "HP:%0.f",ents->Health);
-					ImGui::GetBackgroundDrawList()->AddText(ImVec2(posscreen.x - ImGui::CalcTextSize(healths).x / 2, posscreen.y - ImGui::CalcTextSize(healths).y / 2), ImColor(255, 255, 255), healths);
+					if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+						sprintf_s(healths, 50, "HP:%0.f", ents->Health);
+						ImGui::GetBackgroundDrawList()->AddText(ImVec2(posscreen.x - ImGui::CalcTextSize(healths).x / 2, posscreen.y - ImGui::CalcTextSize(healths).y / 2), ImColor(255, 255, 255), healths);
+					}
 				}
 			}
 		}
