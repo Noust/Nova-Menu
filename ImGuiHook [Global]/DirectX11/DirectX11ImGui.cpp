@@ -133,33 +133,34 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		if (ImGui::Button("Teleport", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
 			UserSettings.MenuWindow = 2;
 		}
-		ImGui::EndChild;
+		ImGui::EndChild();
 		ImGui::SameLine();
 		ImGui::BeginChild("##rigthside", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), true);
-		ImGui::EndChild;
-		ImGui::End;
+		if (UserSettings.MenuWindow == 0) {
+			ImGui::Checkbox("Box Esp",&UserSettings.BoxEsp);
+			if (UserSettings.BoxEsp) {
+				ImGui::ColorEdit4("Player Color", (float*)(&UserSettings.PlayerBoxColor));
+				ImGui::ColorEdit4("NPC Color", (float*)(&UserSettings.NPCBoxColor));
+				ImGui::SliderFloat("Box Width", &UserSettings.BoxWidth, 0, 1);
+				ImGui::Separator();
+			}
+			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
+		}
+		if (UserSettings.MenuWindow == 1) {
+
+		}
+		if (UserSettings.MenuWindow == 2) {
+
+		}
+		ImGui::EndChild();
+		ImGui::End();
 	}
 	if (hooked) {
-		if (UserSettings.BoneEsp) {
+		if (UserSettings.BoxEsp) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				DWORD64 EntityAddr = E.GetEntity(i);
 				if (EntityAddr != 0) {
-					Vector2 head = GetposBone(EntityAddr, _HEAD_);
-					Vector2 neck = GetposBone(EntityAddr, _NECK_);
-					Vector2 stomach = GetposBone(EntityAddr, _STOMACH_);
-					Vector2 Rhand = GetposBone(EntityAddr, _RIGHTHAND_);
-					Vector2 Lhand = GetposBone(EntityAddr, _LEFTHAND_);
-					Vector2 Rfootback = GetposBone(EntityAddr, _RIGHTFOOTBACK_);
-					Vector2 Lfootback = GetposBone(EntityAddr, _LEFTFOOTBACK_);
-					Vector2 Rfootfront = GetposBone(EntityAddr, _RIGHTFOOTFRONT_);
-					Vector2 Lfootfront = GetposBone(EntityAddr, _LEFTFOOTFRONT_);
-					DrawLine(neck, stomach, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-					DrawLine(neck, Rhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-					DrawLine(neck, Lhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-					DrawLine(stomach, Lfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-					DrawLine(stomach, Rfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-					DrawLine(Rfootback, Rfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-					DrawLine(Lfootback, Lfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+
 				}
 			}
 		}
