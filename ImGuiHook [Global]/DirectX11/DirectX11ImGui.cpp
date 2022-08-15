@@ -30,15 +30,17 @@ void Colors() {
 	style.WindowMinSize = ImVec2(783, 508);
 	style.WindowTitleAlign = { 0.5,0.5f };
 }
-
+//Address of signature = GTA5.exe + 0x007905C8
+//"\x48\x89\x00\x00\x00\x48\x89\x00\x00\x00\x48\x89\x00\x00\x00\x57\x48\x83\xEC\x00\x48\x8B\x00\x41\x8B\x00\x48\x8B\x00\x48\x8B\x00\x33\xDB\xFF\x50\x00\x48\x8B\x00\x48\x85\x00\x74\x00\x48\x8B\x00\x00\x48\x85\x00\x74\x00\x48\x39\x00\x00\x74\x00\x48\x8B\x00\x00\x00\x00\x00\xEB\x00\x48\x8B\x00\x00\x48\x85\x00\x74\x00\x48\x8B\x00\x00\xEB\x00\x48\x8B\x00\x48\x85\x00\x74\x00\x8B\xD5\x48\x8B\x00\xE8\x00\x00\x00\x00\x8B\xD0\x83\xF8\x00\x74\x00\x48\x8B\x00\x4C\x8D\x00\x00\x00\x48\x8B\x00\xFF\x50\x00\xB3\x00\x0F\x28", "xx???xx???xx???xxxx?xx?xx?xx?xx?xxxx?xx?xx?x?xx??xx?x?xx??x?xx?????x?xx??xx?x?xx??x?xx?xx?x?xxxx?x????xxxx?x?xx?xx???xx?xx?x?xx"
+//"48 89 ? ? ? 48 89 ? ? ? 48 89 ? ? ? 57 48 83 EC ? 48 8B ? 41 8B ? 48 8B ? 48 8B ? 33 DB FF 50 ? 48 8B ? 48 85 ? 74 ? 48 8B ? ? 48 85 ? 74 ? 48 39 ? ? 74 ? 48 8B ? ? ? ? ? EB ? 48 8B ? ? 48 85 ? 74 ? 48 8B ? ? EB ? 48 8B ? 48 85 ? 74 ? 8B D5 48 8B ? E8 ? ? ? ? 8B D0 83 F8 ? 74 ? 48 8B ? 4C 8D ? ? ? 48 8B ? FF 50 ? B3 ? 0F 28"
 
 DWORD WINAPI InitiateHooks(HMODULE hMod) {
 	while (!hooked) {
 		char modulename[] = "GTA5.exe";
 		char sig[] = "\xF3\x0F\x00\x00\x00\x0F\x28\x00\x0F\x28\x00\x00\x0F\x28\x00\x00\xF3\x0F";
 		char mask[] = "xx???xx?xx??xx??xx";
-		char sig1[] = "\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8";
-		char mask1[] = "xxx????xx????x";
+		char sig1[] = "\x48\x89\x00\x00\x00\x48\x89\x00\x00\x00\x48\x89\x00\x00\x00\x57\x48\x83\xEC\x00\x48\x8B\x00\x41\x8B\x00\x48\x8B\x00\x48\x8B\x00\x33\xDB\xFF\x50\x00\x48\x8B\x00\x48\x85\x00\x74\x00\x48\x8B\x00\x00\x48\x85\x00\x74\x00\x48\x39\x00\x00\x74\x00\x48\x8B\x00\x00\x00\x00\x00\xEB\x00\x48\x8B\x00\x00\x48\x85\x00\x74\x00\x48\x8B\x00\x00\xEB\x00\x48\x8B\x00\x48\x85\x00\x74\x00\x8B\xD5\x48\x8B\x00\xE8\x00\x00\x00\x00\x8B\xD0\x83\xF8\x00\x74\x00\x48\x8B\x00\x4C\x8D\x00\x00\x00\x48\x8B\x00\xFF\x50\x00\xB3\x00\x0F\x28";
+		char mask1[] = "xx???xx???xx???xxxx?xx?xx?xx?xx?xxxx?xx?xx?x?xx??xx?x?xx??x?xx?????x?xx??xx?x?xx??x?xx?xx?x?xxxx?x????xxxx?x?xx?xx???xx?xx?x?xx";
 		HookAddr = FindPattern(modulename, sig, mask);
 		BoneFunc = FindPattern(modulename, sig1, mask1);
 		int HookLength = 16;
@@ -164,8 +166,64 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					Vector3 pos = ents->pos;
 					Vector2 posscreen = PosToScreen(pos);
 					if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
-						Vector2 head = GetBonePos(E.GetEntity(i), _HEAD_);
-						DrawLine({ 1920 / 2, 1080 }, head, ImColor(255, 255, 255), 1);
+						Vector2 rToe = GetBonePos(E.GetEntity(i), 0x512D);
+						Vector2 rFoot = GetBonePos(E.GetEntity(i), 0xCC4D);
+						Vector2 rCalf = GetBonePos(E.GetEntity(i), 0x9000);
+						Vector2 rThigh = GetBonePos(E.GetEntity(i), 0xCA72);
+
+						Vector2 lToe = GetBonePos(E.GetEntity(i), 0x083C);
+						Vector2 lFoot = GetBonePos(E.GetEntity(i), 0x3779);
+						Vector2 lCalf = GetBonePos(E.GetEntity(i), 0xF9BB);
+						Vector2 lThigh = GetBonePos(E.GetEntity(i), 0xE39F);
+
+						Vector2 pelvis = GetBonePos(E.GetEntity(i), 0x2E28);
+						Vector2 spineRoot = GetBonePos(E.GetEntity(i), 0xE0FD);
+						Vector2 spine0 = GetBonePos(E.GetEntity(i), 0x5C01);
+						Vector2 spine1 = GetBonePos(E.GetEntity(i), 0x60F0);
+						Vector2 spine2 = GetBonePos(E.GetEntity(i), 0x60F1);
+						Vector2 spine3 = GetBonePos(E.GetEntity(i), 0x60F2);
+
+						Vector2 lClavicle = GetBonePos(E.GetEntity(i), 0xFCD9);
+						Vector2 lUpperArm = GetBonePos(E.GetEntity(i), 0xB1C5);
+						Vector2 lForearm = GetBonePos(E.GetEntity(i), 0xEEEB);
+						Vector2 lHand = GetBonePos(E.GetEntity(i), 0x49D9);
+
+						Vector2 rClavicle = GetBonePos(E.GetEntity(i), 0x29D2);
+						Vector2 rUpperArm = GetBonePos(E.GetEntity(i), 0x9D4D);
+						Vector2 rForearm = GetBonePos(E.GetEntity(i), 0x6E5C);
+						Vector2 rHand = GetBonePos(E.GetEntity(i), 0xDEAD);
+
+						Vector2 neck = GetBonePos(E.GetEntity(i), 0x9995);
+						Vector2 head = GetBonePos(E.GetEntity(i), 0x796E);
+
+						DrawLine(rToe, rFoot, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(rFoot, rCalf, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(rCalf, rThigh, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(rThigh, pelvis, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+
+						DrawLine(lToe, lFoot, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(lFoot, lCalf, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(lCalf, lThigh, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(lThigh, pelvis, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+
+						DrawLine(pelvis, spineRoot, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(spineRoot, spine0, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(spine0, spine1, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(spine1, spine2, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(spine2, spine3, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(spine3, neck, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+
+						DrawLine(lClavicle, lUpperArm, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(lUpperArm, lForearm, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(lForearm, lHand, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+
+						DrawLine(rClavicle, rUpperArm, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(rUpperArm, rForearm, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(rForearm, rHand, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+
+						DrawLine(rClavicle, neck, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						DrawLine(lClavicle, neck, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+						ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.NPCBoxColor, 0, UserSettings.BoxThickness);
 					}
 				}
 			}

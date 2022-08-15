@@ -8,5 +8,5 @@ DWORD64 Entity::GetEntity(int index) {
 }
 short Entity::GetMaxEntities() {
 	short maxents = *(short*)((DWORD64)GetModuleHandleA("GTA5.exe") + (0x266DBC8 + (1 << 3)));
-	return maxents - 1;
+	return maxents - 2;
 }
