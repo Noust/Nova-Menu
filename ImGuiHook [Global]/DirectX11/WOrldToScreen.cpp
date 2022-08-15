@@ -23,9 +23,11 @@ bool WorldToScreen(Vector4 pos, float matrix[16], Vector2& posscreen) {
 Vector2 PosToScreen(Vector4 pos) {
 	float Matrix[16];
 	Vector2 posscreen;
-	memcpy(&Matrix, (PBYTE*)ViewAddr, sizeof(Matrix));
-	if (WorldToScreen(pos, Matrix, posscreen)) {
-		return posscreen;
+	if (hooked) {
+		memcpy(&Matrix, (PBYTE*)ViewAddr, sizeof(Matrix));
+		if (WorldToScreen(pos, Matrix, posscreen)) {
+			return posscreen;
+		}
 	}
 	return { -1,-1 };
 }

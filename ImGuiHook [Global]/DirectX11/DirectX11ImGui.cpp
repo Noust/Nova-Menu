@@ -29,8 +29,10 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 		HookAddr = FindPattern(modulename, sig, mask);
 		int HookLength = 16;
 		jmpback = HookAddr + HookLength;
-		Hook((BYTE*)HookAddr, (BYTE*)GetView, HookLength);
-		hooked = true;
+		if (HookAddr != NULL) {
+			Hook((BYTE*)HookAddr, (BYTE*)GetView, HookLength);
+			hooked = true;
+		}
 	}
 	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
@@ -174,7 +176,9 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
-	Patch((BYTE*)HookAddr, (BYTE*)"\xF3\x0F\x11\x45\x00\x0F\x28\x20\x0F\x28\x68\x10\x0F\x28\x70\x20", 16);
+	if (HookAddr != NULL) {
+		Patch((BYTE*)HookAddr, (BYTE*)"\xF3\x0F\x11\x45\x00\x0F\x28\x20\x0F\x28\x68\x10\x0F\x28\x70\x20", 16);
+	}
 	ShowMenu = false;
 	Sleep(10);
 	DisableAll();
