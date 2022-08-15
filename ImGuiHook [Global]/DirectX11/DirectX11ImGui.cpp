@@ -30,17 +30,17 @@ void Colors() {
 	style.WindowMinSize = ImVec2(783, 508);
 	style.WindowTitleAlign = { 0.5,0.5f };
 }
-//Address of signature = GTA5.exe + 0x007905C8
-//"\x48\x89\x00\x00\x00\x48\x89\x00\x00\x00\x48\x89\x00\x00\x00\x57\x48\x83\xEC\x00\x48\x8B\x00\x41\x8B\x00\x48\x8B\x00\x48\x8B\x00\x33\xDB\xFF\x50\x00\x48\x8B\x00\x48\x85\x00\x74\x00\x48\x8B\x00\x00\x48\x85\x00\x74\x00\x48\x39\x00\x00\x74\x00\x48\x8B\x00\x00\x00\x00\x00\xEB\x00\x48\x8B\x00\x00\x48\x85\x00\x74\x00\x48\x8B\x00\x00\xEB\x00\x48\x8B\x00\x48\x85\x00\x74\x00\x8B\xD5\x48\x8B\x00\xE8\x00\x00\x00\x00\x8B\xD0\x83\xF8\x00\x74\x00\x48\x8B\x00\x4C\x8D\x00\x00\x00\x48\x8B\x00\xFF\x50\x00\xB3\x00\x0F\x28", "xx???xx???xx???xxxx?xx?xx?xx?xx?xxxx?xx?xx?x?xx??xx?x?xx??x?xx?????x?xx??xx?x?xx??x?xx?xx?x?xxxx?x????xxxx?x?xx?xx???xx?xx?x?xx"
-//"48 89 ? ? ? 48 89 ? ? ? 48 89 ? ? ? 57 48 83 EC ? 48 8B ? 41 8B ? 48 8B ? 48 8B ? 33 DB FF 50 ? 48 8B ? 48 85 ? 74 ? 48 8B ? ? 48 85 ? 74 ? 48 39 ? ? 74 ? 48 8B ? ? ? ? ? EB ? 48 8B ? ? 48 85 ? 74 ? 48 8B ? ? EB ? 48 8B ? 48 85 ? 74 ? 8B D5 48 8B ? E8 ? ? ? ? 8B D0 83 F8 ? 74 ? 48 8B ? 4C 8D ? ? ? 48 8B ? FF 50 ? B3 ? 0F 28"
+//Address of signature = GTA5.exe + 0x007904F0
+//"\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8", "xxx????xx????x"
+//"41 81 E8 ? ? ? ? 0F 84 ? ? ? ? B8"
 
 DWORD WINAPI InitiateHooks(HMODULE hMod) {
 	while (!hooked) {
 		char modulename[] = "GTA5.exe";
 		char sig[] = "\xF3\x0F\x00\x00\x00\x0F\x28\x00\x0F\x28\x00\x00\x0F\x28\x00\x00\xF3\x0F";
 		char mask[] = "xx???xx?xx??xx??xx";
-		char sig1[] = "\x48\x89\x00\x00\x00\x48\x89\x00\x00\x00\x48\x89\x00\x00\x00\x57\x48\x83\xEC\x00\x48\x8B\x00\x41\x8B\x00\x48\x8B\x00\x48\x8B\x00\x33\xDB\xFF\x50\x00\x48\x8B\x00\x48\x85\x00\x74\x00\x48\x8B\x00\x00\x48\x85\x00\x74\x00\x48\x39\x00\x00\x74\x00\x48\x8B\x00\x00\x00\x00\x00\xEB\x00\x48\x8B\x00\x00\x48\x85\x00\x74\x00\x48\x8B\x00\x00\xEB\x00\x48\x8B\x00\x48\x85\x00\x74\x00\x8B\xD5\x48\x8B\x00\xE8\x00\x00\x00\x00\x8B\xD0\x83\xF8\x00\x74\x00\x48\x8B\x00\x4C\x8D\x00\x00\x00\x48\x8B\x00\xFF\x50\x00\xB3\x00\x0F\x28";
-		char mask1[] = "xx???xx???xx???xxxx?xx?xx?xx?xx?xxxx?xx?xx?x?xx??xx?x?xx??x?xx?????x?xx??xx?x?xx??x?xx?xx?x?xxxx?x????xxxx?x?xx?xx???xx?xx?x?xx";
+		char sig1[] = "\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8";
+		char mask1[] = "xxx????xx????x";
 		HookAddr = FindPattern(modulename, sig, mask);
 		BoneFunc = FindPattern(modulename, sig1, mask1);
 		int HookLength = 16;
@@ -140,11 +140,11 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::SameLine();
 		ImGui::BeginChild("##rigthside", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), true);
 		if (UserSettings.MenuWindow == 0) {
-			ImGui::Checkbox("Box Esp",&UserSettings.BoxEsp);
-			if (UserSettings.BoxEsp) {
-				ImGui::ColorEdit4("Player Color", (float*)(&UserSettings.PlayerBoxColor));
-				ImGui::ColorEdit4("NPC Color", (float*)(&UserSettings.NPCBoxColor));
-				ImGui::SliderFloat("Box Width", &UserSettings.BoxWidth, 0, 1);
+			ImGui::Checkbox("Bone Esp",&UserSettings.BoneEsp);
+			if (UserSettings.BoneEsp) {
+				ImGui::ColorEdit4("Player Color", (float*)(&UserSettings.PlayerBoneColor));
+				ImGui::ColorEdit4("NPC Color", (float*)(&UserSettings.NPCBoneColor));
+				ImGui::SliderInt("Bone thickness", &UserSettings.BoneThickness, 0, 10);
 				ImGui::Separator();
 			}
 			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
@@ -159,71 +159,47 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::End();
 	}
 	if (hooked) {
-		if (UserSettings.BoxEsp) {
+		if (UserSettings.BoneEsp) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				ents = (Entitys*)(E.GetEntity(i));
 				if (ents != nullptr) {
-					Vector3 pos = ents->pos;
-					Vector2 posscreen = PosToScreen(pos);
-					if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
-						Vector2 rToe = GetBonePos(E.GetEntity(i), 0x512D);
-						Vector2 rFoot = GetBonePos(E.GetEntity(i), 0xCC4D);
-						Vector2 rCalf = GetBonePos(E.GetEntity(i), 0x9000);
-						Vector2 rThigh = GetBonePos(E.GetEntity(i), 0xCA72);
+					float maxhealth = ents->MaxHealth;
+					if (maxhealth > 11 && maxhealth < 999) {
+						Vector3 pos = ents->pos;
+						Vector2 posscreen = PosToScreen(pos);
+						if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+							DWORD64 EntityAddr = E.GetEntity(i);
+							Vector2 neck = GetBonePos(EntityAddr, _NECK_);
+							Vector2 head = GetBonePos(EntityAddr, _HEAD_);
+							Vector2 Rhand = GetBonePos(EntityAddr, _RIGHTHAND_);
+							Vector2 Lhand = GetBonePos(EntityAddr, _LEFTHAND_);
+							Vector2 stomach = GetBonePos(EntityAddr, _STOMACH_);
+							Vector2 Rfootback = GetBonePos(EntityAddr, _RIGHTFOOTBACK_);
+							Vector2 Lfootback = GetBonePos(EntityAddr, _LEFTFOOTBACK_);
+							Vector2 Rfootfront = GetBonePos(EntityAddr, _RIGHTFOOTFRONT_);
+							Vector2 Lfootfront = GetBonePos(EntityAddr, _LEFTFOOTFRONT_);
+							if (maxhealth > 11 && maxhealth < 201) {
+								DrawLine(neck, stomach, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+								DrawLine(neck, Rhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+								DrawLine(neck, Lhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+								DrawLine(stomach, Rfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+								DrawLine(stomach, Lfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+								DrawLine(Lfootback, Lfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+								DrawLine(Rfootback, Rfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+								ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.NPCBoneColor, 0, UserSettings.BoneThickness);
+							}
+							if (maxhealth > 201 && maxhealth < 999) {
 
-						Vector2 lToe = GetBonePos(E.GetEntity(i), 0x083C);
-						Vector2 lFoot = GetBonePos(E.GetEntity(i), 0x3779);
-						Vector2 lCalf = GetBonePos(E.GetEntity(i), 0xF9BB);
-						Vector2 lThigh = GetBonePos(E.GetEntity(i), 0xE39F);
-
-						Vector2 pelvis = GetBonePos(E.GetEntity(i), 0x2E28);
-						Vector2 spineRoot = GetBonePos(E.GetEntity(i), 0xE0FD);
-						Vector2 spine0 = GetBonePos(E.GetEntity(i), 0x5C01);
-						Vector2 spine1 = GetBonePos(E.GetEntity(i), 0x60F0);
-						Vector2 spine2 = GetBonePos(E.GetEntity(i), 0x60F1);
-						Vector2 spine3 = GetBonePos(E.GetEntity(i), 0x60F2);
-
-						Vector2 lClavicle = GetBonePos(E.GetEntity(i), 0xFCD9);
-						Vector2 lUpperArm = GetBonePos(E.GetEntity(i), 0xB1C5);
-						Vector2 lForearm = GetBonePos(E.GetEntity(i), 0xEEEB);
-						Vector2 lHand = GetBonePos(E.GetEntity(i), 0x49D9);
-
-						Vector2 rClavicle = GetBonePos(E.GetEntity(i), 0x29D2);
-						Vector2 rUpperArm = GetBonePos(E.GetEntity(i), 0x9D4D);
-						Vector2 rForearm = GetBonePos(E.GetEntity(i), 0x6E5C);
-						Vector2 rHand = GetBonePos(E.GetEntity(i), 0xDEAD);
-
-						Vector2 neck = GetBonePos(E.GetEntity(i), 0x9995);
-						Vector2 head = GetBonePos(E.GetEntity(i), 0x796E);
-
-						DrawLine(rToe, rFoot, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(rFoot, rCalf, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(rCalf, rThigh, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(rThigh, pelvis, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-
-						DrawLine(lToe, lFoot, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(lFoot, lCalf, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(lCalf, lThigh, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(lThigh, pelvis, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-
-						DrawLine(pelvis, spineRoot, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(spineRoot, spine0, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(spine0, spine1, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(spine1, spine2, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(spine2, spine3, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(spine3, neck, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-
-						DrawLine(lClavicle, lUpperArm, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(lUpperArm, lForearm, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(lForearm, lHand, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-
-						DrawLine(rClavicle, rUpperArm, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(rUpperArm, rForearm, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(rForearm, rHand, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-
-						DrawLine(rClavicle, neck, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						DrawLine(lClavicle, neck, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-						ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.NPCBoxColor, 0, UserSettings.BoxThickness);
+								DrawLine(neck, stomach, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+								DrawLine(neck, Rhand, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+								DrawLine(neck, Lhand, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+								DrawLine(stomach, Rfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+								DrawLine(stomach, Lfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+								DrawLine(Lfootback, Lfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+								DrawLine(Rfootback, Rfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+								ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.PlayerBoneColor, 0, UserSettings.BoneThickness);
+							}
+						}
 					}
 				}
 			}
