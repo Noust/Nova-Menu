@@ -9,5 +9,12 @@ public:
 	ImColor PlayerBoneColor = { 0,0,255 };
 	ImColor NPCBoneColor = { 0, 255, 0 };
 
+
+	bool BoxEsp = false;
+	int BoxThickness = 0;
+	ImColor PlayerBoxColor = { 0,0,255 };
+	ImColor NPCBoxColor = { 0, 255, 0 };
+	float BoxWidth = 0.5f;
+
 	float ESPDistance = 200;
 }UserSettings;

@@ -147,6 +147,14 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::SliderInt("Bone thickness", &UserSettings.BoneThickness, 0, 10);
 				ImGui::Separator();
 			}
+			ImGui::Checkbox("Box Esp", &UserSettings.BoxEsp);
+			if (UserSettings.BoxEsp) {
+				ImGui::ColorEdit4("Player Color", (float*)(&UserSettings.PlayerBoxColor));
+				ImGui::ColorEdit4("NPC Color", (float*)(&UserSettings.NPCBoxColor));
+				ImGui::SliderInt("Box thickness", &UserSettings.BoxThickness, 0, 10);
+				ImGui::SliderFloat("Box Width", &UserSettings.BoxWidth, 0, 1);
+				ImGui::Separator();
+			}
 			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
 		}
 		if (UserSettings.MenuWindow == 1) {
@@ -159,7 +167,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::End();
 	}
 	if (hooked) {
-		if (UserSettings.BoneEsp) {
+		if (UserSettings.BoneEsp || UserSettings.BoxEsp) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				ents = (Entitys*)(E.GetEntity(i));
 				if (ents != nullptr) {
@@ -168,38 +176,54 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 						Vector3 pos = ents->pos;
 						if (local->pos.Distance(pos) < UserSettings.ESPDistance){
 							pos.z -= 1.0f;
+							Vector3 pos1 = ents->pos;
+							pos1.z += 0.8f;
 							Vector2 posscreen = PosToScreen(pos);
-							if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
-								DWORD64 EntityAddr = E.GetEntity(i);
-								Vector2 neck = GetBonePos(EntityAddr, _NECK_);
-								Vector2 head = GetBonePos(EntityAddr, _HEAD_);
-								Vector2 Rhand = GetBonePos(EntityAddr, _RIGHTHAND_);
-								Vector2 Lhand = GetBonePos(EntityAddr, _LEFTHAND_);
-								Vector2 stomach = GetBonePos(EntityAddr, _STOMACH_);
-								Vector2 Rfootback = GetBonePos(EntityAddr, _RIGHTFOOTBACK_);
-								Vector2 Lfootback = GetBonePos(EntityAddr, _LEFTFOOTBACK_);
-								Vector2 Rfootfront = GetBonePos(EntityAddr, _RIGHTFOOTFRONT_);
-								Vector2 Lfootfront = GetBonePos(EntityAddr, _LEFTFOOTFRONT_);
-								if (maxhealth > 11 && maxhealth < 201) {
-									DrawLine(neck, stomach, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-									DrawLine(neck, Rhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-									DrawLine(neck, Lhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-									DrawLine(stomach, Rfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-									DrawLine(stomach, Lfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-									DrawLine(Lfootback, Lfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-									DrawLine(Rfootback, Rfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-									ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.NPCBoneColor, 0, UserSettings.BoneThickness);
+							Vector2 posscreen1 = PosToScreen(pos1);
+							if (UserSettings.BoxEsp) {
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									float heigth = posscreen.y - posscreen1.y;
+									if (maxhealth > 11 && maxhealth < 201) {
+										DrawRect(posscreen, heigth, heigth * UserSettings.BoxWidth, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+									}
+									if (maxhealth > 201 && maxhealth < 999) {
+										DrawRect(posscreen, heigth, heigth * UserSettings.BoxWidth, UserSettings.PlayerBoxColor, UserSettings.BoxThickness);
+									}
 								}
-								if (maxhealth > 201 && maxhealth < 999) {
+							}
+							if (UserSettings.BoxEsp) {
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									DWORD64 EntityAddr = E.GetEntity(i);
+									Vector2 neck = GetBonePos(EntityAddr, _NECK_);
+									Vector2 head = GetBonePos(EntityAddr, _HEAD_);
+									Vector2 Rhand = GetBonePos(EntityAddr, _RIGHTHAND_);
+									Vector2 Lhand = GetBonePos(EntityAddr, _LEFTHAND_);
+									Vector2 stomach = GetBonePos(EntityAddr, _STOMACH_);
+									Vector2 Rfootback = GetBonePos(EntityAddr, _RIGHTFOOTBACK_);
+									Vector2 Lfootback = GetBonePos(EntityAddr, _LEFTFOOTBACK_);
+									Vector2 Rfootfront = GetBonePos(EntityAddr, _RIGHTFOOTFRONT_);
+									Vector2 Lfootfront = GetBonePos(EntityAddr, _LEFTFOOTFRONT_);
+									if (maxhealth > 11 && maxhealth < 201) {
+										DrawLine(neck, stomach, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+										DrawLine(neck, Rhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+										DrawLine(neck, Lhand, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+										DrawLine(stomach, Rfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+										DrawLine(stomach, Lfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+										DrawLine(Lfootback, Lfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+										DrawLine(Rfootback, Rfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
+										ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.NPCBoneColor, 0, UserSettings.BoneThickness);
+									}
+									if (maxhealth > 201 && maxhealth < 999) {
 
-									DrawLine(neck, stomach, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-									DrawLine(neck, Rhand, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-									DrawLine(neck, Lhand, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-									DrawLine(stomach, Rfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-									DrawLine(stomach, Lfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-									DrawLine(Lfootback, Lfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-									DrawLine(Rfootback, Rfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-									ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.PlayerBoneColor, 0, UserSettings.BoneThickness);
+										DrawLine(neck, stomach, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+										DrawLine(neck, Rhand, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+										DrawLine(neck, Lhand, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+										DrawLine(stomach, Rfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+										DrawLine(stomach, Lfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+										DrawLine(Lfootback, Lfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+										DrawLine(Rfootback, Rfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
+										ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.PlayerBoneColor, 0, UserSettings.BoneThickness);
+									}
 								}
 							}
 						}
