@@ -54,11 +54,6 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 	FreeLibraryAndExitThread(hMod, 0);
 }
 
-Vector2 GetposBone(DWORD64 EntityAddr, DWORD mask) {
-	Vector4 TempVec;
-	reinterpret_cast<void* (__fastcall*)(DWORD64, Vector4*, DWORD)>(BoneFunc)(EntityAddr, &TempVec, mask);
-	return PosToScreen(TempVec);
-}
 
 namespace Process {
 	DWORD ID;
@@ -161,9 +156,11 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				DWORD64 EntityAddr = E.GetEntity(i);
 				if (EntityAddr != 0) {
-					ents = (Entitys*)(EntityAddr);
+					ents = (Entitys*)(0x25C4B3B5D40);
+					Vector3 pos = ents->pos;
+					Vector2 posscreen = PosToScreen(pos);
 					sprintf_s(healths, 50, "HP:%0.f",ents->Health);
-					ImGui::GetBackgroundDrawList()->AddText(ImVec2(100, 100), ImColor(255, 255, 255), healths);
+					ImGui::GetBackgroundDrawList()->AddText(ImVec2(posscreen.x - ImGui::CalcTextSize(healths).x / 2, posscreen.y - ImGui::CalcTextSize(healths).y / 2), ImColor(255, 255, 255), healths);
 				}
 			}
 		}
