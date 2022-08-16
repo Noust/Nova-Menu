@@ -22,3 +22,13 @@ bool Entity::Alive() {
 	else
 		return false;
 }
+bool Entity::CarExist() {
+	if (local->CarPtr != 0)
+		return true;
+	return false;
+}
+bool Entity::IsInCar() {
+	if (local->IsInCar == 96 && local->CarPtr != 0)
+		return true;
+	return false;
+}

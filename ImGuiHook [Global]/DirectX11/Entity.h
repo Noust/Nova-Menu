@@ -7,4 +7,6 @@ public:
 	short GetMaxEntities();
 	DWORD64 GetLocalPlayer();
 	bool Alive();
+	bool CarExist();
+	bool IsInCar();
 };

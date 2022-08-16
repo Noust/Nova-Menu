@@ -7,10 +7,20 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 		if (hooked) {
 			local = (Entitys*)(E.GetLocalPlayer());
 			if (local != 0) {
-				if (UserSettings.Godmode && E.Alive())
-					local->GodMode = true;
+				if (UserSettings.Godmode) {
+					if (E.Alive())
+						local->GodMode = true;
+				}
 				else
 					local->GodMode = false;
+				if (UserSettings.CarGodMode) {
+					if (E.CarExist())
+						local->CarPtr->GodMode = true;
+				}
+				else {
+					if (E.CarExist())
+						local->CarPtr->GodMode = false;
+				}
 			}
 		}
 		Sleep(20);

@@ -40,6 +40,7 @@ public:
 	ImColor NPCDistanceColor = { 0, 255, 0 };
 
 	bool Godmode = false;
+	bool CarGodMode = false;
 
 	float ESPDistance = 200;
 }UserSettings;

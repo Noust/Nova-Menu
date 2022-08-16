@@ -224,6 +224,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		}
 		if (UserSettings.MenuWindow == 1) {
 			ImGui::Checkbox("GodMode", &UserSettings.Godmode);
+			ImGui::Checkbox("Car GodMode", &UserSettings.CarGodMode);
 		}
 		if (UserSettings.MenuWindow == 2) {
 
