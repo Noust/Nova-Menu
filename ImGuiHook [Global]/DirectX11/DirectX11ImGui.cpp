@@ -22,6 +22,7 @@ void Colors() {
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowPadding = ImVec2(10, 10);
 	style.WindowRounding = 5.0f;
+	style.ChildRounding = 5.0f;
 	style.FramePadding = ImVec2(5, 5);
 	style.FrameRounding = 4.0f;
 	style.ItemSpacing = ImVec2(12, 8);
@@ -239,9 +240,33 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui::Checkbox("Car GodMode", &UserSettings.CarGodMode);
 			ImGui::Checkbox("Never Wanted", &UserSettings.NeverWanted);
 			ImGui::Checkbox("Infinite Ammo", &UserSettings.InfAmmo);
+			ImGui::Checkbox("No Car Collision", &UserSettings.nocarcollision);
+			ImGui::Checkbox("Kill Aura", &UserSettings.KillAura);
+			if (UserSettings.KillAura) {
+				ImGui::SliderFloat("Kill Aura Dist", &UserSettings.KillAuraDist, 1, 300);
+			}
 		}
 		if (UserSettings.MenuWindow == 2) {
+			if (ImGui::Button("Waypoint", ImVec2(100, 25))) {
 
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("TP to car", ImVec2(100, 25))) {
+
+			}
+			ImGui::Separator();
+			if (ImGui::Button("Places")) {
+
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Interiors")) {
+
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Custom XYZ")) {
+
+			}
+			ImGui::Separator();
 		}
 		ImGui::EndChild();
 		ImGui::End();

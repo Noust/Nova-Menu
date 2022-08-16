@@ -46,6 +46,9 @@ public:
 	bool CarGodMode = false;
 	bool NeverWanted = false;
 	bool InfAmmo = false;
+	bool nocarcollision = false;
+	bool KillAura = false;
+	float KillAuraDist = 6.0f;
 
 	float ESPDistance = 200;
 }UserSettings;

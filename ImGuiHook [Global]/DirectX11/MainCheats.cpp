@@ -21,6 +21,14 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 					if (E.CarExist())
 						local->CarPtr->GodMode = false;
 				}
+				if (UserSettings.nocarcollision) {
+					if (E.CarExist())
+						local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 0;
+				}
+				else {
+					if (E.CarExist())
+						local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 1;
+				}
 				if (UserSettings.NeverWanted) {
 					if (E.Alive())
 						local->PlayerInfoPtr->WantedLevel = 0;
@@ -38,6 +46,17 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 				else {
 					Patch((BYTE*)PatchAddr, (BYTE*)"\x66\x45\x89\x53\x56", 5);
 					Patch((BYTE*)PatchAddr1, (BYTE*)"\x89\x5F\x20", 3);
+				}
+				if (UserSettings.KillAura) {
+					for (int i = 0; i < E.GetMaxEntities(); i++) {
+						DWORD64 EntityAddr = E.GetEntity(i);
+						if (EntityAddr != 0) {
+							entsK = (Entitys*)(EntityAddr);
+							if (local->pos.Distance(entsK->pos) < UserSettings.KillAuraDist) {
+								entsK->Health = 0;
+							}
+						}
+					}
 				}
 			}
 		}
