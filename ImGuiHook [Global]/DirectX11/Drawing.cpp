@@ -74,3 +74,6 @@ void DrawBox3d(DWORD64 EntityAddr, ImColor color, int thickness) {
 	DrawLine(posscreen6, posscreen7, color, thickness);
 	DrawLine(posscreen7, posscreen4, color, thickness);
 }
+void DrawCircle(Vector2 pos, ImColor color, float radius, int thickness) {
+	ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(pos.x, pos.y), radius, color, 0, thickness);
+}

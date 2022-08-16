@@ -272,7 +272,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 										DrawLine(stomach, Lfootback, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
 										DrawLine(Lfootback, Lfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
 										DrawLine(Rfootback, Rfootfront, UserSettings.NPCBoneColor, UserSettings.BoneThickness);
-										ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.NPCBoneColor, 0, UserSettings.BoneThickness);
+										DrawCircle(head, UserSettings.NPCBoneColor, (neck.y - head.y) + 2, UserSettings.BoneThickness);
 									}
 									if (maxhealth > 201 && maxhealth < 999) {
 
@@ -283,7 +283,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 										DrawLine(stomach, Lfootback, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
 										DrawLine(Lfootback, Lfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
 										DrawLine(Rfootback, Rfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
-										ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.PlayerBoneColor, 0, UserSettings.BoneThickness);
+										DrawCircle(head, UserSettings.PlayerBoneColor, (neck.y - head.y) + 2, UserSettings.BoneThickness);
 									}
 								}
 							}
