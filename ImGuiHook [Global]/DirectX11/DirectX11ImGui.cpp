@@ -231,13 +231,14 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::ColorEdit4("Name Player Color", (float*)(&UserSettings.PlayerNameColor));
 				ImGui::Separator();
 			}
+			ImGui::Separator();
 			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
 		}
 		if (UserSettings.MenuWindow == 1) {
 			ImGui::Checkbox("GodMode", &UserSettings.Godmode);
 			ImGui::Checkbox("Car GodMode", &UserSettings.CarGodMode);
 			ImGui::Checkbox("Never Wanted", &UserSettings.NeverWanted);
-			ImGui::Checkbox("Ininite Ammo", &UserSettings.InfAmmo);
+			ImGui::Checkbox("Infinite Ammo", &UserSettings.InfAmmo);
 		}
 		if (UserSettings.MenuWindow == 2) {
 
@@ -396,10 +397,6 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	return oIDXGISwapChainPresent(pSwapChain, SyncInterval, Flags);
 }
 
-void APIENTRY MJDrawIndexed(ID3D11DeviceContext* pContext, UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation) {
-
-}
-
 DWORD WINAPI MainThread(HMODULE hMod) {
 	bool WindowFocus = false;
 	while (WindowFocus == false) {
@@ -435,7 +432,6 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 	while (InitHook == false) {
 		if (DirectX11::Init() == true) {
 		    CreateHook(8, (void**)&oIDXGISwapChainPresent, MJPresent);
-			CreateHook(12, (void**)&oID3D11DrawIndexed, MJDrawIndexed);
 			InitHook = true;
 		}
 	}
@@ -467,12 +463,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved) {
 			StartFunc(hModule, (LPTHREAD_START_ROUTINE)InitiateHooks);
 			StartFunc(hModule, (LPTHREAD_START_ROUTINE)SetValues);
 		}
-		break;
-	case DLL_PROCESS_DETACH:
-		break;
-	case DLL_THREAD_ATTACH:
-		break;
-	case DLL_THREAD_DETACH:
 		break;
 	default:
 		break;
