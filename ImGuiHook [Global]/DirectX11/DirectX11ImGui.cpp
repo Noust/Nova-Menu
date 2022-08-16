@@ -45,11 +45,17 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 		char mask[] = "xx???xx?xx??xx??xx";
 		char sig1[] = "\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8";
 		char mask1[] = "xxx????xx????x";
+		char sig2[] = "\x66\x45\x00\x00\x00\x74\x00\x41\x0F\x00\x00\x00\x49\x8B";
+		char mask2[] = "xx???x?xx???xx";
+		char sig3[] = "\x89\x5F\x00\x48\x8B\x00\x00\x00\x48\x8B\x00\x00\x00\x48\x8B\x00\x00\x00\x48\x83\xC4\x00\x5F\xC3\xCC\x2D";
+		char mask3[] = "xx?xx???xx???xx???xxx?xxxx";
 		HookAddr = FindPattern(modulename, sig, mask);
 		BoneFunc = FindPattern(modulename, sig1, mask1);
+		PatchAddr = FindPattern(modulename, sig2, mask2);
+		PatchAddr1 = FindPattern(modulename, sig3, mask3);
 		int HookLength = 16;
 		jmpback = HookAddr + HookLength;
-		if (HookAddr != NULL && BoneFunc != NULL) {
+		if (HookAddr != NULL && BoneFunc != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
 			Hook((BYTE*)HookAddr, (BYTE*)GetView, HookLength);
 			hooked = true;
 		}
@@ -220,11 +226,18 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::ColorEdit4("Distance NPC Color", (float*)(&UserSettings.NPCDistanceColor));
 				ImGui::Separator();
 			}
+			ImGui::Checkbox("Name Esp", &UserSettings.Name);
+			if (UserSettings.Name) {
+				ImGui::ColorEdit4("Name Player Color", (float*)(&UserSettings.PlayerNameColor));
+				ImGui::Separator();
+			}
 			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
 		}
 		if (UserSettings.MenuWindow == 1) {
 			ImGui::Checkbox("GodMode", &UserSettings.Godmode);
 			ImGui::Checkbox("Car GodMode", &UserSettings.CarGodMode);
+			ImGui::Checkbox("Never Wanted", &UserSettings.NeverWanted);
+			ImGui::Checkbox("Ininite Ammo", &UserSettings.InfAmmo);
 		}
 		if (UserSettings.MenuWindow == 2) {
 
@@ -233,7 +246,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::End();
 	}
 	if (hooked) {
-		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP) {
+		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				DWORD64 EntityAddr = E.GetEntity(i);
 				ents = (Entitys*)(EntityAddr);
@@ -356,7 +369,17 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 										DrawChar(posscreen3, Distances, UserSettings.NPCDistanceColor, 2);
 									}
 									if (maxhealth > 201 && maxhealth < 999) {
-										DrawChar(posscreen3, Distances, UserSettings.PlayerDistanceColor, 2);
+										DrawChar(posscreen3, Distances, UserSettings.PlayerDistanceColor, 1.5f);
+									}
+								}
+							}
+							if (UserSettings.Name) {
+								Vector3 pos3 = ents->pos;
+								pos3.z -= 1.4f;
+								Vector2 posscreen3 = PosToScreen(pos3);
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									if (maxhealth > 201 && maxhealth < 999) {
+										DrawChar(posscreen3, ents->PlayerInfoPtr->Names, UserSettings.PlayerNameColor, 6);
 									}
 								}
 							}
@@ -419,8 +442,10 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
-	if (HookAddr != NULL) {
+	if (HookAddr != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
 		Patch((BYTE*)HookAddr, (BYTE*)"\xF3\x0F\x11\x45\x00\x0F\x28\x20\x0F\x28\x68\x10\x0F\x28\x70\x20", 16);
+		Patch((BYTE*)PatchAddr, (BYTE*)"\x66\x45\x89\x53\x56", 5);
+		Patch((BYTE*)PatchAddr1, (BYTE*)"\x89\x5F\x20", 3);
 	}
 	ShowMenu = false;
 	Sleep(10);

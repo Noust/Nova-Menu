@@ -1,6 +1,8 @@
 #pragma once
 bool hooked = false;
 DWORD64 HookAddr;
+DWORD64 PatchAddr;
+DWORD64 PatchAddr1;
 DWORD64 ViewAddr;
 DWORD64 jmpback;
 

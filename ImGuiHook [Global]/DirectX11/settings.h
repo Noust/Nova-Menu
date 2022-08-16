@@ -39,8 +39,13 @@ public:
 	ImColor PlayerDistanceColor = { 0,0,255 };
 	ImColor NPCDistanceColor = { 0, 255, 0 };
 
+	bool Name = false;
+	ImColor PlayerNameColor = { 0,0,255 };
+
 	bool Godmode = false;
 	bool CarGodMode = false;
+	bool NeverWanted = false;
+	bool InfAmmo = false;
 
 	float ESPDistance = 200;
 }UserSettings;
