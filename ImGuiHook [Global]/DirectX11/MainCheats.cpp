@@ -6,6 +6,12 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 	while (!GetAsyncKeyState(VK_DELETE)) {
 		if (hooked) {
 			local = (Entitys*)(E.GetLocalPlayer());
+			if (local != 0) {
+				if (UserSettings.Godmode)
+					local->GodMode = true;
+				else
+					local->GodMode = false;
+			}
 		}
 		Sleep(20);
 	}

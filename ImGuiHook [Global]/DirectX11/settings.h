@@ -39,5 +39,7 @@ public:
 	ImColor PlayerDistanceColor = { 0,0,255 };
 	ImColor NPCDistanceColor = { 0, 255, 0 };
 
+	bool Godmode = false;
+
 	float ESPDistance = 200;
 }UserSettings;

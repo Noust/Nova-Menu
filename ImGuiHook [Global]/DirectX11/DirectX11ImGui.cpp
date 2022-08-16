@@ -223,7 +223,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
 		}
 		if (UserSettings.MenuWindow == 1) {
-
+			ImGui::Checkbox("GodMode", &UserSettings.Godmode);
 		}
 		if (UserSettings.MenuWindow == 2) {
 
@@ -236,7 +236,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				DWORD64 EntityAddr = E.GetEntity(i);
 				ents = (Entitys*)(EntityAddr);
-				if (ents != nullptr) {
+				if (EntityAddr != 0 && local != 0) {
 					float maxhealth = ents->MaxHealth;
 					float health = ents->Health;
 					if (maxhealth > 11 && maxhealth < 999 && health != 0) {
