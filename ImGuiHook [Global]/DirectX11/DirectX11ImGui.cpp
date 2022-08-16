@@ -13,6 +13,9 @@ bool ImGui_Initialised = false;
 Entity E;
 DWORD64 BoneFunc;
 char healths[50];
+char Distances[50];
+char NPCT[] = "NPC";
+char PLAYERT[] = "PLAYER";
 Vector2 SnapLineBegin = { 1920 / 2,1080 };
 
 void Colors() {
@@ -193,14 +196,28 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					UserSettings.bottom = false;
 					UserSettings.top = true;
 				}
-				if (ImGui::Button("Center")) {
-					UserSettings.bottom = false;
-					UserSettings.top = false;
-				}
 				if (ImGui::Button("Bottom")) {
 					UserSettings.bottom = true;
 					UserSettings.top = false;
 				}
+				ImGui::Separator();
+			}
+			ImGui::Checkbox("Type Esp", &UserSettings.Type);
+			if (UserSettings.Type) {
+				ImGui::ColorEdit4("Type Player Color", (float*)(&UserSettings.PlayerTypeColor));
+				ImGui::ColorEdit4("Type NPC Color", (float*)(&UserSettings.NPCTypeColor));
+				ImGui::Separator();
+			}
+			ImGui::Checkbox("HP Esp", &UserSettings.HP);
+			if (UserSettings.HP) {
+				ImGui::ColorEdit4("HP Player Color", (float*)(&UserSettings.PlayerHPColor));
+				ImGui::ColorEdit4("HP NPC Color", (float*)(&UserSettings.NPCHPColor));
+				ImGui::Separator();
+			}
+			ImGui::Checkbox("Distance Esp", &UserSettings.Distance);
+			if (UserSettings.Distance) {
+				ImGui::ColorEdit4("Distance Player Color", (float*)(&UserSettings.PlayerDistanceColor));
+				ImGui::ColorEdit4("Distance NPC Color", (float*)(&UserSettings.NPCDistanceColor));
 				ImGui::Separator();
 			}
 			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
@@ -215,12 +232,14 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::End();
 	}
 	if (hooked) {
-		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine) {
+		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
-				ents = (Entitys*)(E.GetEntity(i));
+				DWORD64 EntityAddr = E.GetEntity(i);
+				ents = (Entitys*)(EntityAddr);
 				if (ents != nullptr) {
 					float maxhealth = ents->MaxHealth;
-					if (maxhealth > 11 && maxhealth < 999) {
+					float health = ents->Health;
+					if (maxhealth > 11 && maxhealth < 999 && health != 0) {
 						Vector3 pos = ents->pos;
 						if (local->pos.Distance(pos) < UserSettings.ESPDistance){
 							pos.z -= 1.0f;
@@ -236,7 +255,6 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 							Vector2 posscreen2 = PosToScreen(pos2);
 							if (UserSettings.BoneEsp) {
 								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
-									DWORD64 EntityAddr = E.GetEntity(i);
 									Vector2 neck = GetBonePos(EntityAddr, _NECK_);
 									Vector2 head = GetBonePos(EntityAddr, _HEAD_);
 									Vector2 Rhand = GetBonePos(EntityAddr, _RIGHTHAND_);
@@ -291,12 +309,53 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 								}
 							}
 							if (UserSettings.SnapLine) {
-								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+								if (posscreen2.x > 0 && posscreen2.y > 0 && posscreen2.x < 1920 && posscreen2.y < 1080) {
 									if (maxhealth > 11 && maxhealth < 201) {
 										DrawLine(SnapLineBegin, posscreen2, UserSettings.NPCSnapColor, UserSettings.ThicknessSnap);
 									}
 									if (maxhealth > 201 && maxhealth < 999) {
 										DrawLine(SnapLineBegin, posscreen2, UserSettings.PlayerSnapColor, UserSettings.ThicknessSnap);
+									}
+								}
+							}
+							if (UserSettings.Type) {
+								Vector3 pos3 = ents->pos;
+								pos3.z += 1.2f;
+								Vector2 posscreen3 = PosToScreen(pos3);
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									if (maxhealth > 11 && maxhealth < 201) {
+										DrawChar(posscreen3, NPCT, UserSettings.NPCTypeColor, 1);
+									}
+									if (maxhealth > 201 && maxhealth < 999) {
+										DrawChar(posscreen3, PLAYERT, UserSettings.PlayerTypeColor, 1);
+									}
+								}
+							}
+							if (UserSettings.HP) {
+								Vector3 pos3 = ents->pos;
+								pos3.z += 1.0f;
+								Vector2 posscreen3 = PosToScreen(pos3);
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									sprintf_s(healths, 50, "HP:%0.f", health);
+									if (maxhealth > 11 && maxhealth < 201) {
+										DrawChar(posscreen3, healths, UserSettings.NPCHPColor, 2);
+									}
+									if (maxhealth > 201 && maxhealth < 999) {
+										DrawChar(posscreen3, healths, UserSettings.PlayerHPColor, 2);
+									}
+								}
+							}
+							if (UserSettings.Distance) {
+								Vector3 pos3 = ents->pos;
+								pos3.z -= 1.2f;
+								Vector2 posscreen3 = PosToScreen(pos3);
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									sprintf_s(Distances, 50, "[%0.fm]", local->pos.Distance(pos));
+									if (maxhealth > 11 && maxhealth < 201) {
+										DrawChar(posscreen3, Distances, UserSettings.NPCDistanceColor, 2);
+									}
+									if (maxhealth > 201 && maxhealth < 999) {
+										DrawChar(posscreen3, Distances, UserSettings.PlayerDistanceColor, 2);
 									}
 								}
 							}

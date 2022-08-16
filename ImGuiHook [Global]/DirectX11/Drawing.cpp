@@ -10,8 +10,8 @@ void DrawRect(Vector2 pos, float height, float width, ImColor color, int thickne
 	DrawLine({ pos.x - width / 2,pos.y - height }, { pos.x + width / 2,pos.y - height }, color, thickness);
 	DrawLine({ pos.x + width / 2,pos.y - height }, { pos.x + width / 2,pos.y }, color, thickness);
 }
-void DrawChar(Vector2 pos, char* text, ImColor color) {
-	ImGui::GetBackgroundDrawList()->AddText(ImVec2(pos.x - ImGui::CalcTextSize(text).x / 2, pos.y - ImGui::CalcTextSize(text).y / 2), color, text);
+void DrawChar(Vector2 pos, char* text, ImColor color, float divide) {
+	ImGui::GetBackgroundDrawList()->AddText(ImVec2(pos.x - ImGui::CalcTextSize(text).x / 2, pos.y - ImGui::CalcTextSize(text).y / divide), color, text);
 }
 void DrawBox3d(DWORD64 EntityAddr, ImColor color, int thickness) {
 	ents3 = (Entitys*)(EntityAddr);

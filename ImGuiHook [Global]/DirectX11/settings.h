@@ -25,7 +25,19 @@ public:
 	ImColor PlayerSnapColor = { 0,0,255 };
 	ImColor NPCSnapColor = { 0, 255, 0 };
 	bool top = false;
-	bool bottom = false;
+	bool bottom = true;
+
+	bool Type = false;
+	ImColor PlayerTypeColor = { 0,0,255 };
+	ImColor NPCTypeColor = { 0, 255, 0 };
+
+	bool HP = false;
+	ImColor PlayerHPColor = { 0,0,255 };
+	ImColor NPCHPColor = { 0, 255, 0 };
+
+	bool Distance = false;
+	ImColor PlayerDistanceColor = { 0,0,255 };
+	ImColor NPCDistanceColor = { 0, 255, 0 };
 
 	float ESPDistance = 200;
 }UserSettings;
