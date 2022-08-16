@@ -13,6 +13,7 @@ bool ImGui_Initialised = false;
 Entity E;
 DWORD64 BoneFunc;
 char healths[50];
+Vector2 SnapLineBegin = { 1920 / 2,1080 };
 
 void Colors() {
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -142,17 +143,64 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		if (UserSettings.MenuWindow == 0) {
 			ImGui::Checkbox("Bone Esp",&UserSettings.BoneEsp);
 			if (UserSettings.BoneEsp) {
-				ImGui::ColorEdit4("Player Color", (float*)(&UserSettings.PlayerBoneColor));
-				ImGui::ColorEdit4("NPC Color", (float*)(&UserSettings.NPCBoneColor));
+				ImGui::ColorEdit4("Bone Player Color", (float*)(&UserSettings.PlayerBoneColor));
+				ImGui::ColorEdit4("Bone NPC Color", (float*)(&UserSettings.NPCBoneColor));
 				ImGui::SliderInt("Bone thickness", &UserSettings.BoneThickness, 0, 10);
 				ImGui::Separator();
 			}
 			ImGui::Checkbox("Box Esp", &UserSettings.BoxEsp);
 			if (UserSettings.BoxEsp) {
-				ImGui::ColorEdit4("Player Color", (float*)(&UserSettings.PlayerBoxColor));
-				ImGui::ColorEdit4("NPC Color", (float*)(&UserSettings.NPCBoxColor));
+				ImGui::ColorEdit4("Box Player Color", (float*)(&UserSettings.PlayerBoxColor));
+				ImGui::ColorEdit4("Box NPC Color", (float*)(&UserSettings.NPCBoxColor));
 				ImGui::SliderInt("Box thickness", &UserSettings.BoxThickness, 0, 10);
 				ImGui::SliderFloat("Box Width", &UserSettings.BoxWidth, 0, 1);
+				ImGui::Separator();
+			}
+			ImGui::Checkbox("3D Box Esp", &UserSettings.Esp3d);
+			if (UserSettings.Esp3d) {
+				ImGui::ColorEdit4("3D Box Player Color", (float*)(&UserSettings.Player3dColor));
+				ImGui::ColorEdit4("3D Box NPC Color", (float*)(&UserSettings.NPC3dColor));
+				ImGui::SliderInt("3D Box thickness", &UserSettings.Thickness3d, 0, 10);
+				ImGui::Separator();
+			}
+			ImGui::Checkbox("Snap Box Esp", &UserSettings.SnapLine);
+			if (UserSettings.SnapLine) {
+				ImGui::ColorEdit4("Snap Player Color", (float*)(&UserSettings.PlayerSnapColor));
+				ImGui::ColorEdit4("Snap NPC Color", (float*)(&UserSettings.NPCSnapColor));
+				ImGui::SliderInt("Snap thickness", &UserSettings.ThicknessSnap, 0, 10);
+				ImGui::Spacing();
+				ImGui::Spacing();
+				ImGui::Text("Snap Line begin place");
+				if (ImGui::Button("Bottom Center")) {
+					SnapLineBegin = { 1920 / 2,1080 };
+				}
+				if (ImGui::Button("Center")) {
+					SnapLineBegin = { 1920 / 2,1080 / 2 };
+				}
+				if (ImGui::Button("Top Center")) {
+					SnapLineBegin = { 1920 / 2,0 };
+				}
+				if (ImGui::Button("Center Right")) {
+					SnapLineBegin = { 1920,1080 / 2 };
+				}
+				if (ImGui::Button("Center Left")) {
+					SnapLineBegin = { 0,1080 / 2 };
+				}
+				ImGui::Spacing();
+				ImGui::Spacing();
+				ImGui::Text("Snap Line end place");
+				if (ImGui::Button("Top")) {
+					UserSettings.bottom = false;
+					UserSettings.top = true;
+				}
+				if (ImGui::Button("Center")) {
+					UserSettings.bottom = false;
+					UserSettings.top = false;
+				}
+				if (ImGui::Button("Bottom")) {
+					UserSettings.bottom = true;
+					UserSettings.top = false;
+				}
 				ImGui::Separator();
 			}
 			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
@@ -167,7 +215,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::End();
 	}
 	if (hooked) {
-		if (UserSettings.BoneEsp || UserSettings.BoxEsp) {
+		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				ents = (Entitys*)(E.GetEntity(i));
 				if (ents != nullptr) {
@@ -178,20 +226,15 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 							pos.z -= 1.0f;
 							Vector3 pos1 = ents->pos;
 							pos1.z += 0.8f;
+							Vector3 pos2 = ents->pos;
+							if (UserSettings.top)
+								pos2.z += 0.8f;
+							if (UserSettings.bottom)
+								pos2.z -= 1.0f;
 							Vector2 posscreen = PosToScreen(pos);
 							Vector2 posscreen1 = PosToScreen(pos1);
-							if (UserSettings.BoxEsp) {
-								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
-									float heigth = posscreen.y - posscreen1.y;
-									if (maxhealth > 11 && maxhealth < 201) {
-										DrawRect(posscreen, heigth, heigth * UserSettings.BoxWidth, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
-									}
-									if (maxhealth > 201 && maxhealth < 999) {
-										DrawRect(posscreen, heigth, heigth * UserSettings.BoxWidth, UserSettings.PlayerBoxColor, UserSettings.BoxThickness);
-									}
-								}
-							}
-							if (UserSettings.BoxEsp) {
+							Vector2 posscreen2 = PosToScreen(pos2);
+							if (UserSettings.BoneEsp) {
 								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
 									DWORD64 EntityAddr = E.GetEntity(i);
 									Vector2 neck = GetBonePos(EntityAddr, _NECK_);
@@ -223,6 +266,37 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 										DrawLine(Lfootback, Lfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
 										DrawLine(Rfootback, Rfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
 										ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(head.x, head.y), (neck.y - head.y) + 2, UserSettings.PlayerBoneColor, 0, UserSettings.BoneThickness);
+									}
+								}
+							}
+							if (UserSettings.BoxEsp) {
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									float heigth = posscreen.y - posscreen1.y;
+									if (maxhealth > 11 && maxhealth < 201) {
+										DrawRect(posscreen, heigth, heigth * UserSettings.BoxWidth, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
+									}
+									if (maxhealth > 201 && maxhealth < 999) {
+										DrawRect(posscreen, heigth, heigth * UserSettings.BoxWidth, UserSettings.PlayerBoxColor, UserSettings.BoxThickness);
+									}
+								}
+							}
+							if (UserSettings.Esp3d) {
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									if (maxhealth > 11 && maxhealth < 201) {
+										DrawBox3d(E.GetEntity(i), UserSettings.NPC3dColor, UserSettings.Thickness3d);
+									}
+									if (maxhealth > 201 && maxhealth < 999) {
+										DrawBox3d(E.GetEntity(i), UserSettings.Player3dColor, UserSettings.Thickness3d);
+									}
+								}
+							}
+							if (UserSettings.SnapLine) {
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									if (maxhealth > 11 && maxhealth < 201) {
+										DrawLine(SnapLineBegin, posscreen2, UserSettings.NPCSnapColor, UserSettings.ThicknessSnap);
+									}
+									if (maxhealth > 201 && maxhealth < 999) {
+										DrawLine(SnapLineBegin, posscreen2, UserSettings.PlayerSnapColor, UserSettings.ThicknessSnap);
 									}
 								}
 							}

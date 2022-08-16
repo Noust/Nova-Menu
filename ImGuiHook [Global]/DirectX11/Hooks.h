@@ -157,6 +157,7 @@ public:
 
 Entitys* ents;
 Entitys* local;
+Entitys* ents3;
 
 __declspec(naked) void GetView() {
 	__asm{
