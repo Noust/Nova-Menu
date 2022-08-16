@@ -16,3 +16,9 @@ DWORD64 Entity::GetLocalPlayer() {
 		return *(DWORD64*)(EntityA);
 	return 0;
 }
+bool Entity::Alive() {
+	if (local->Health != 0)
+		return true;
+	else
+		return false;
+}

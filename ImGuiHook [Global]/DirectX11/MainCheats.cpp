@@ -7,7 +7,7 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 		if (hooked) {
 			local = (Entitys*)(E.GetLocalPlayer());
 			if (local != 0) {
-				if (UserSettings.Godmode)
+				if (UserSettings.Godmode && E.Alive())
 					local->GodMode = true;
 				else
 					local->GodMode = false;
