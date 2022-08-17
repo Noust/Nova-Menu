@@ -93,12 +93,14 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 						}
 					}
 				}
-				if (E.Alive()) {
-					local->PlayerInfoPtr->SwimSpeed = UserSettings.SwimSpeed;
-					local->PlayerInfoPtr->RunSpeed = UserSettings.runSpeed;
-					if (E.IsInCar()) {
-						local->CarPtr->CarCustom->ACCELERATION = UserSettings.caracceleration;
-						local->CarPtr->GravityCar = UserSettings.carGravity;
+				if (UserSettings.CustomValues) {
+					if (E.Alive()) {
+						local->PlayerInfoPtr->SwimSpeed = UserSettings.SwimSpeed;
+						local->PlayerInfoPtr->RunSpeed = UserSettings.runSpeed;
+						if (E.IsInCar()) {
+							local->CarPtr->CarCustom->ACCELERATION = UserSettings.caracceleration;
+							local->CarPtr->GravityCar = UserSettings.carGravity;
+						}
 					}
 				}
 			}

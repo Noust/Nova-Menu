@@ -28,10 +28,8 @@ bool Entity::CarExist() {
 	return false;
 }
 bool Entity::IsInCar() {
-	if (local->IsInCar == 96 || local->IsInCar == 64) {
-		if (CarExist())
-			return true;
-	}
+	if (local->IsInCar == 96 && CarExist())
+		return true;
 	return false;
 }
 void Entity::SetPos(Vector3 pos) {
