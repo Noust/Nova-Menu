@@ -248,6 +248,29 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			if (UserSettings.KillAura) {
 				ImGui::SliderFloat("Kill Aura Dist", &UserSettings.KillAuraDist, 1, 300);
 			}
+			ImGui::Spacing();
+			ImGui::Spacing();
+			if (ImGui::Button("Give Ammo")) {
+				if (E.Alive()) {
+					local->Weapon->Weaponptr->Weaponptr2->Weaponptr3->Weaponptr4->CurrentAmmo = 9999;
+				}
+			}
+			if (ImGui::Button("Car Max Health")) {
+				if (E.CarExist()) {
+					local->CarPtr->Health = 1000.0f;
+				}
+			}
+			if (ImGui::Button("Max Health")) {
+				if (E.CarExist()) {
+					local->Health = local->MaxHealth;
+				}
+			}
+			if (ImGui::Button("Default")) {
+				UserSettings.runSpeed = 1;
+				UserSettings.SwimSpeed = 1;
+			}
+			ImGui::SliderFloat("RunSpeed", &UserSettings.runSpeed, 0, 50);
+			ImGui::SliderFloat("SwimSpeed", &UserSettings.SwimSpeed, 0, 50);
 		}
 		if (UserSettings.MenuWindow == 2) {
 			if (ImGui::Button("Waypoint", ImVec2(100, 25))) {

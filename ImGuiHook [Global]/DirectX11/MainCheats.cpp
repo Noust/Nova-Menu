@@ -58,6 +58,10 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 						}
 					}
 				}
+				if (E.Alive()) {
+					local->PlayerInfoPtr->SwimSpeed = UserSettings.SwimSpeed;
+					local->PlayerInfoPtr->RunSpeed = UserSettings.runSpeed;
+				}
 			}
 		}
 		Sleep(20);
