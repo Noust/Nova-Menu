@@ -4,10 +4,10 @@ bool initiate1 = false;
 
 DWORD WINAPI SetValues(HMODULE hMod) {
 	Entity E;
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		if (hooked) {
 			local = (Entitys*)(E.GetLocalPlayer());
-			if (local != 0) {
+			if (local != 0 && !OnPause()) {
 				if (UserSettings.Godmode) {
 					if (local->GodMode != true)
 						local->GodMode = true;

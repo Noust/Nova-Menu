@@ -64,7 +64,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
 	FreeLibraryAndExitThread(hMod, 0);
@@ -625,7 +625,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::EndChild();
 		ImGui::End();
 	}
-	if (hooked) {
+	if (hooked && !OnPause()) {
 		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				int64_t EntityAddr = E.GetEntity(i);
@@ -814,7 +814,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
 	if (HookAddr != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
