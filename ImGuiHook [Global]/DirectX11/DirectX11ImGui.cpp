@@ -151,13 +151,14 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			UserSettings.MenuWindow = 2;
 		}
 		if (ImGui::Button("Disable All", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+			UserSettings.CustomValues = true;
+			UserSettings.carGravity = 9.800000191f;
 			UserSettings.Godmode = false;
 			UserSettings.CarGodMode = false;
 			UserSettings.NeverWanted = false;
 			UserSettings.InfAmmo = false;
 			UserSettings.nocarcollision = false;
 			UserSettings.KillAura = false;
-			UserSettings.CustomValues = false;
 			UserSettings.Name = false;
 			UserSettings.Distance = false;
 			UserSettings.HP = false;
@@ -166,20 +167,22 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			UserSettings.Esp3d = false;
 			UserSettings.BoxEsp = false;
 			UserSettings.BoneEsp = false;
+			UserSettings.CustomValues = false;
 		}
 		if (ImGui::Button("Best Configuration", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+			UserSettings.CustomValues = true;
+			UserSettings.carGravity = 79.0f;
 			UserSettings.Godmode = true;
 			UserSettings.CarGodMode = true;
 			UserSettings.NeverWanted = true;
 			UserSettings.InfAmmo = true;
 			UserSettings.nocarcollision = true;
-			UserSettings.CustomValues = true;
-			UserSettings.carGravity = 79.0f;
 			UserSettings.Name = true;
 			UserSettings.Distance = true;
 			UserSettings.HP = true;
 			UserSettings.Type = true;
 			UserSettings.BoxEsp = true;
+			UserSettings.CustomValues = false;
 		}
 		ImGui::EndChild();
 		ImGui::SameLine();
