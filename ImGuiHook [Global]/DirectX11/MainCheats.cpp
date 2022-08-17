@@ -15,8 +15,10 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 					}
 				}
 				else {
-					if (E.Alive())
-						local->GodMode = false;
+					if (E.Alive()) {
+						if (local->GodMode != false)
+							local->GodMode = false;
+					}
 				}
 				if (UserSettings.CarGodMode) {
 					if (E.CarExist()) {
@@ -25,8 +27,10 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 					}
 				}
 				else {
-					if (E.CarExist())
-						local->CarPtr->GodMode = false;
+					if (E.CarExist()) {
+						if (local->CarPtr->GodMode != false)
+							local->CarPtr->GodMode = false;
+					}
 				}
 				if (UserSettings.nocarcollision) {
 					if (E.CarExist()) {
@@ -35,8 +39,10 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 					}
 				}
 				else {
-					if (E.CarExist())
-						local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 1;
+					if (E.CarExist()) {
+						if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER != 1)
+							local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 1;
+					}
 				}
 				if (UserSettings.NeverWanted) {
 					if (E.Alive()) {
