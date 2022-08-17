@@ -258,7 +258,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				if (E.CarExist() && !E.IsInCar()) {
 					Vector3 pos = local->CarPtr->CarPos->CarRealPos;
 					pos.z += 1.5f;
-					local->RealP->Realpos = pos;
+					E.SetPos(pos);
 				}
 			}
 			ImGui::Separator();
@@ -456,6 +456,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				}
 				if (ImGui::Button("Suburban Clothing")) {
 					E.SetPos({ -1207.556152f,-783.2567139f,17.09370613f });
+				}
+				if (ImGui::Button("Bunker")) {
+					E.SetPos({ -736.9771118f,5953.104492f,18.09233284f });
 				}
 			}
 			if (UserSettings.TpWindowMenu == 1) {
