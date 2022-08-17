@@ -34,11 +34,8 @@ Vector2 PosToScreen(Vector3 pos) {
 }
 
 bool OnPause() {
-	int8_t OnPauseB = *(int8_t*)((DWORD64)GetModuleHandleA("GTA5.exe") + 0x20EA34D);
+	int8_t OnPauseB = *(int8_t*)((DWORD64)GetModuleHandleA("GTA5.exe") + 0x20D6107);
 	if (OnPauseB != 0)
 		return true;
 	return false;
 }
-//Address of signature = 0x227E1E8D637
-//"\x80\xB8\x4D\xA3\x0E\x02\x00\x75\x00\x80\x3D\x15\x2A\x02\x00", "xxxxxx?x?xxxxxx"
-//"80 B8 4D A3 0E 02 ? 75 ? 80 3D 15 2A 02 00"

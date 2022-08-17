@@ -11,6 +11,7 @@
 #include "../Directories/ImGui/imgui_impl_dx11.h"
 #include "../Directories/ImGui/imgui_impl_win32.h"
 #include "Vector.h"
+bool ShowMenu = false;
 
 #include "Hooks.h"
 #include "settings.h"

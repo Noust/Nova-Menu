@@ -8,7 +8,6 @@
 #define _RIGHTHAND_         0xDEAD
 #define _NECK_              0x9995
 #define _STOMACH_	       0x60F0
-bool ShowMenu = false;
 bool ImGui_Initialised = false;
 Entity E;
 DWORD64 BoneFunc;
@@ -64,7 +63,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		Sleep(500);
 	}
 	FreeLibraryAndExitThread(hMod, 0);
@@ -814,7 +813,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		Sleep(500);
 	}
 	if (HookAddr != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
