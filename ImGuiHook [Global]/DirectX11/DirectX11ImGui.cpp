@@ -70,10 +70,10 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 	FreeLibraryAndExitThread(hMod, 0);
 }
 
-Vector2 GetBonePos(DWORD64 EntityAddr, DWORD mask) {
+Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
 	Vector4 posbone;
-	reinterpret_cast<void* (__fastcall*)(DWORD64, Vector4*, DWORD)>(BoneFunc)(EntityAddr, &posbone, mask);
-	return bonePosToScreen(posbone);
+	reinterpret_cast<void* (__fastcall*)(int64_t, Vector4*, int32_t)>(BoneFunc)(EntityAddr, &posbone, mask);
+	return PosToScreen({ posbone.x,posbone.y,posbone.z });
 }
 
 namespace Process {
@@ -593,7 +593,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	if (hooked) {
 		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
-				DWORD64 EntityAddr = E.GetEntity(i);
+				int64_t EntityAddr = E.GetEntity(i);
 				ents = (Entitys*)(EntityAddr);
 				if (EntityAddr != 0 && local != 0) {
 					float maxhealth = ents->MaxHealth;

@@ -32,14 +32,3 @@ Vector2 PosToScreen(Vector3 pos) {
 	}
 	return { -1,-1 };
 }
-Vector2 bonePosToScreen(Vector4 pos) {
-	float Matrix[16];
-	Vector2 posscreen;
-	if (hooked && ViewAddr != NULL) {
-		memcpy(&Matrix, (PBYTE*)ViewAddr, sizeof(Matrix));
-		if (WorldToScreen(pos, Matrix, posscreen)) {
-			return posscreen;
-		}
-	}
-	return { -1,-1 };
-}
