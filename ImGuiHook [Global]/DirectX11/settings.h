@@ -55,7 +55,7 @@ public:
 	Vector3 XYZCustom;
 	Vector3 PointPos;
 
-	float SwimSpeed, runSpeed;
+	float SwimSpeed = 1, runSpeed = 1;
 
 	float ESPDistance = 200;
 }UserSettings;
