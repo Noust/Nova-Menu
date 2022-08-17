@@ -61,6 +61,9 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 				if (E.Alive()) {
 					local->PlayerInfoPtr->SwimSpeed = UserSettings.SwimSpeed;
 					local->PlayerInfoPtr->RunSpeed = UserSettings.runSpeed;
+					if (E.CarExist()) {
+						local->CarPtr->CarCustom->ACCELERATION = UserSettings.caracceleration;
+					}
 				}
 			}
 		}
