@@ -3,14 +3,10 @@ bool initiate = false;
 bool initiate1 = false;
 bool initiate2 = false;
 bool initiate3 = false;
-bool initiate4 = false;
-bool initiate5 = false;
-bool initiate6 = false;
-bool initiate7 = false;
 
 DWORD WINAPI SetValues(HMODULE hMod) {
 	Entity E;
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		if (hooked) {
 			local = (Entitys*)(E.GetLocalPlayer());
 			if (local != 0) {
@@ -37,46 +33,30 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 					}
 				}
 				if (UserSettings.CarGodMode) {
-					if (!initiate4) {
-						if (E.CarExist()) {
-							if (local->CarPtr->GodMode != true) {
-								local->CarPtr->GodMode = true;
-								initiate4 = true;
-								initiate5 = false;
-							}
+					if (E.IsInCar()) {
+						if (local->CarPtr->GodMode != true) {
+							local->CarPtr->GodMode = true;
 						}
 					}
 				}
 				else {
-					if (!initiate5) {
-						if (E.CarExist()) {
-							if (local->CarPtr->GodMode != false) {
-								local->CarPtr->GodMode = false;
-								initiate4 = false;
-								initiate5 = true;
-							}
+					if (E.IsInCar()) {
+						if (local->CarPtr->GodMode != false) {
+							local->CarPtr->GodMode = false;
 						}
 					}
 				}
 				if (UserSettings.nocarcollision) {
-					if (!initiate6) {
-						if (E.CarExist()) {
-							if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER != 0) {
-								local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 0;
-								initiate6 = true;
-								initiate7 = false;
-							}
+					if (E.IsInCar()) {
+						if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER != 0) {
+							local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 0;
 						}
 					}
 				}
 				else {
-					if (!initiate7) {
-						if (E.CarExist()) {
-							if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER != 1) {
-								local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 1;
-								initiate6 = false;
-								initiate7 = true;
-							}
+					if (E.IsInCar()) {
+						if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER != 1) {
+							local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 1;
 						}
 					}
 				}
