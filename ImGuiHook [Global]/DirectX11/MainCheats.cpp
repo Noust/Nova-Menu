@@ -9,50 +9,40 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 			local = (Entitys*)(E.GetLocalPlayer());
 			if (local != 0) {
 				if (UserSettings.Godmode) {
-					if (E.Alive()) {
-						if (local->GodMode != true)
-							local->GodMode = true;
-					}
+					if (local->GodMode != true)
+						local->GodMode = true;
 				}
 				else {
-					if (E.Alive()) {
-						if (local->GodMode != false)
-							local->GodMode = false;
-					}
+					if (local->GodMode != false)
+						local->GodMode = false;
 				}
 				if (UserSettings.CarGodMode) {
 					if (E.IsInCar()) {
-						if (local->CarPtr->GodMode != true) {
+						if (local->CarPtr->GodMode != true)
 							local->CarPtr->GodMode = true;
-						}
 					}
 				}
 				else {
 					if (E.IsInCar()) {
-						if (local->CarPtr->GodMode != false) {
+						if (local->CarPtr->GodMode != false)
 							local->CarPtr->GodMode = false;
-						}
 					}
 				}
 				if (UserSettings.nocarcollision) {
 					if (E.IsInCar()) {
-						if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER != 0) {
+						if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER != 0)
 							local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 0;
-						}
 					}
 				}
 				else {
 					if (E.IsInCar()) {
-						if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER != 1) {
+						if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER != 1)
 							local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 1;
-						}
 					}
 				}
 				if (UserSettings.NeverWanted) {
-					if (E.Alive()) {
-						if (local->PlayerInfoPtr->WantedLevel != 0)
-							local->PlayerInfoPtr->WantedLevel = 0;
-					}
+					if (local->PlayerInfoPtr->WantedLevel = 0)
+						local->PlayerInfoPtr->WantedLevel = 0;
 				}
 				if (UserSettings.InfAmmo) {
 					if (!initiate) {

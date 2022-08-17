@@ -172,7 +172,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			UserSettings.Distance = true;
 			UserSettings.HP = true;
 			UserSettings.Type = true;
-			UserSettings.BoxEsp = true;
+			UserSettings.BoneEsp = true;
 		}
 		ImGui::EndChild();
 		ImGui::BeginChild("##leftside", ImVec2(200, ImGui::GetContentRegionAvail().y), true);
@@ -284,7 +284,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::SliderFloat("Kill Aura Dist", &UserSettings.KillAuraDist, 1, 300);
 			}
 			if (ImGui::Button("Give Ammo")) {
-				if (E.Alive()) {
+				if (E.Alive() && local->Weapon->Weaponptr->Weaponptr2 != 0) {
 					local->Weapon->Weaponptr->Weaponptr2->Weaponptr3->Weaponptr4->CurrentAmmo = 9999;
 				}
 			}
