@@ -267,6 +267,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				UserSettings.runSpeed = 1;
 				UserSettings.SwimSpeed = 1;
 				UserSettings.caracceleration = 1;
+				UserSettings.carGravity = 9.800000191f;
 			}
 			ImGui::SliderFloat("RunSpeed", &UserSettings.runSpeed, 0, 50);
 			ImGui::SliderFloat("SwimSpeed", &UserSettings.SwimSpeed, 0, 50);

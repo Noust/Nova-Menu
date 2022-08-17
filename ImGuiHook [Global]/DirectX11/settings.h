@@ -55,7 +55,7 @@ public:
 	Vector3 XYZCustom;
 	Vector3 PointPos;
 
-	float SwimSpeed = 1, runSpeed = 1, caracceleration = 1, carGravity = 1;
+	float SwimSpeed = 1, runSpeed = 1, caracceleration = 1, carGravity = 9.800000191f;
 
 	float ESPDistance = 200;
 }UserSettings;
