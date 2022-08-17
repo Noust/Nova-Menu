@@ -150,6 +150,37 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		if (ImGui::Button("Teleport", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
 			UserSettings.MenuWindow = 2;
 		}
+		if (ImGui::Button("Disable All", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+			UserSettings.Godmode = false;
+			UserSettings.CarGodMode = false;
+			UserSettings.NeverWanted = false;
+			UserSettings.InfAmmo = false;
+			UserSettings.nocarcollision = false;
+			UserSettings.KillAura = false;
+			UserSettings.CustomValues = false;
+			UserSettings.Name = false;
+			UserSettings.Distance = false;
+			UserSettings.HP = false;
+			UserSettings.Type = false;
+			UserSettings.SnapLine = false;
+			UserSettings.Esp3d = false;
+			UserSettings.BoxEsp = false;
+			UserSettings.BoneEsp = false;
+		}
+		if (ImGui::Button("Best Configuration", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+			UserSettings.Godmode = true;
+			UserSettings.CarGodMode = true;
+			UserSettings.NeverWanted = true;
+			UserSettings.InfAmmo = true;
+			UserSettings.nocarcollision = true;
+			UserSettings.CustomValues = true;
+			UserSettings.carGravity = 79.0f;
+			UserSettings.Name = true;
+			UserSettings.Distance = true;
+			UserSettings.HP = true;
+			UserSettings.Type = true;
+			UserSettings.BoxEsp = true;
+		}
 		ImGui::EndChild();
 		ImGui::SameLine();
 		ImGui::BeginChild("##rigthside", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), true);
@@ -176,7 +207,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::SliderInt("3D Box thickness", &UserSettings.Thickness3d, 0, 10);
 				ImGui::Separator();
 			}
-			ImGui::Checkbox("Snap Box Esp", &UserSettings.SnapLine);
+			ImGui::Checkbox("Snap Line Esp", &UserSettings.SnapLine);
 			if (UserSettings.SnapLine) {
 				ImGui::ColorEdit4("Snap Player Color", (float*)(&UserSettings.PlayerSnapColor));
 				ImGui::ColorEdit4("Snap NPC Color", (float*)(&UserSettings.NPCSnapColor));
@@ -236,7 +267,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::Separator();
 			}
 			ImGui::Separator();
-			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 200);
+			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 150);
 		}
 		if (UserSettings.MenuWindow == 1) {
 			ImGui::Checkbox("GodMode", &UserSettings.Godmode);

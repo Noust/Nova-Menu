@@ -1,8 +1,6 @@
 #include "Include.h"
 bool initiate = false;
 bool initiate1 = false;
-bool initiate2 = false;
-bool initiate3 = false;
 
 DWORD WINAPI SetValues(HMODULE hMod) {
 	Entity E;
@@ -11,25 +9,15 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 			local = (Entitys*)(E.GetLocalPlayer());
 			if (local != 0) {
 				if (UserSettings.Godmode) {
-					if (!initiate2) {
-						if (E.Alive()) {
-							if (local->GodMode != true) {
-								local->GodMode = true;
-								initiate2 = true;
-								initiate3 = false;
-							}
-						}
+					if (E.Alive()) {
+						if (local->GodMode != true)
+							local->GodMode = true;
 					}
 				}
 				else {
-					if (!initiate3) {
-						if (E.Alive()) {
-							if (local->GodMode != false) {
-								local->GodMode = false;
-								initiate2 = false;
-								initiate3 = true;
-							}
-						}
+					if (E.Alive()) {
+						if (local->GodMode != false)
+							local->GodMode = false;
 					}
 				}
 				if (UserSettings.CarGodMode) {

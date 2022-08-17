@@ -58,5 +58,5 @@ public:
 	bool CustomValues = false;
 	float SwimSpeed = 1, runSpeed = 1, caracceleration = 1, carGravity = 9.800000191f;
 
-	float ESPDistance = 200;
+	float ESPDistance = 150;
 }UserSettings;
