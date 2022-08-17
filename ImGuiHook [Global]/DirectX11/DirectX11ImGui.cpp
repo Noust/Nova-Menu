@@ -140,18 +140,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	ImGui::GetIO().MouseDrawCursor = ShowMenu;
 	if (ShowMenu == true) {
 		ImGui::Begin("Nova", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
-		ImGui::BeginChild("##leftside", ImVec2(200, ImGui::GetContentRegionAvail().y), true);
-		if (ImGui::Button("Visuals", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
-			UserSettings.MenuWindow = 0;
-		}
-		if (ImGui::Button("Player", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
-			UserSettings.MenuWindow = 1;
-		}
-		if (ImGui::Button("Teleport", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
-			UserSettings.MenuWindow = 2;
-		}
-		if (ImGui::Button("Disable All", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
-			UserSettings.CustomValues = true;
+		ImGui::BeginChild("##Custom", ImVec2(ImGui::GetContentRegionAvail().x, 43), true);
+		if (ImGui::Button("Disable All")) {
+			UserSettings.CustomValues = false;
 			UserSettings.carGravity = 9.800000191f;
 			UserSettings.Godmode = false;
 			UserSettings.CarGodMode = false;
@@ -167,9 +158,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			UserSettings.Esp3d = false;
 			UserSettings.BoxEsp = false;
 			UserSettings.BoneEsp = false;
-			UserSettings.CustomValues = false;
 		}
-		if (ImGui::Button("Best Configuration", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+		ImGui::SameLine();
+		if (ImGui::Button("Best Configuration")) {
 			UserSettings.CustomValues = true;
 			UserSettings.carGravity = 79.0f;
 			UserSettings.Godmode = true;
@@ -182,7 +173,17 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			UserSettings.HP = true;
 			UserSettings.Type = true;
 			UserSettings.BoxEsp = true;
-			UserSettings.CustomValues = false;
+		}
+		ImGui::EndChild();
+		ImGui::BeginChild("##leftside", ImVec2(200, ImGui::GetContentRegionAvail().y), true);
+		if (ImGui::Button("Visuals", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+			UserSettings.MenuWindow = 0;
+		}
+		if (ImGui::Button("Player", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+			UserSettings.MenuWindow = 1;
+		}
+		if (ImGui::Button("Teleport", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+			UserSettings.MenuWindow = 2;
 		}
 		ImGui::EndChild();
 		ImGui::SameLine();
