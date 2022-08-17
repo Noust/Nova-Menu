@@ -14,6 +14,9 @@ Entity E;
 DWORD64 BoneFunc;
 char healths[50];
 char Distances[50];
+char CurrentPointPos[50];
+char YC[50];
+char ZC[50];
 char NPCT[] = "NPC";
 char PLAYERT[] = "PLAYER";
 Vector2 SnapLineBegin = { 1920 / 2,1080 };
@@ -252,21 +255,306 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("TP to car", ImVec2(100, 25))) {
-
+				if (E.CarExist() && !E.IsInCar()) {
+					Vector3 pos = local->CarPtr->CarPos->CarRealPos;
+					pos.z += 1.5f;
+					local->RealP->Realpos = pos;
+				}
 			}
 			ImGui::Separator();
 			if (ImGui::Button("Places")) {
-
+				UserSettings.TpWindowMenu = 0;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Interiors")) {
-
+				UserSettings.TpWindowMenu = 1;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Custom XYZ")) {
-
+				UserSettings.XYZCustom = local->RealP->Realpos;
+				UserSettings.TpWindowMenu = 2;
 			}
 			ImGui::Separator();
+			ImGui::BeginChild("##tpmenu", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false);
+			if (UserSettings.TpWindowMenu == 0) {
+				if (ImGui::Button("Ammunation")) {
+					E.SetPos({ 16.65800095f, -1116.914917f, 29.79118919f });
+				}
+				if (ImGui::Button("Barber Shop")) {
+					E.SetPos({ -1293.230957f, -1117.001953f, 6.639526844f });
+				}
+				if (ImGui::Button("Bennys MotorWorks")) {
+					E.SetPos({ -205.3417816f, -1305.828491f, 31.34135437f });
+				}
+				if (ImGui::Button("LSC")) {
+					E.SetPos({ -367.7335815f, -130.8587646f, 38.66579056f });
+				}
+				if (ImGui::Button("Ponsonbys Clothing")) {
+					E.SetPos({ -153.4320679f, -306.0756836f, 38.71454239f });
+				}
+				if (ImGui::Button("Tatto Parlor")) {
+					E.SetPos({ 319.7876892f, 172.2310944f, 103.7451019f });
+				}
+				if (ImGui::Button("Airport Entrance")) {
+					E.SetPos({ -1034.599976f, -2733.600098f, 13.77630424f });
+				}
+				if (ImGui::Button("Airport Runaway")) {
+					E.SetPos({ -1336.0f, -3044.0f, 13.92542267f });
+				}
+				if (ImGui::Button("Altruist Cult Camp")) {
+					E.SetPos({ -1170.840942f, 4926.645996f, 224.2950134f });
+				}
+				if (ImGui::Button("Calafia Train Bridge")) {
+					E.SetPos({ -517.8690186f, 4425.28418f, 89.79501343f });
+				}
+				if (ImGui::Button("Cargo Ship")) {
+					E.SetPos({ 899.6779785f, -2882.190918f, 19.01298904f });
+				}
+				if (ImGui::Button("Chumash Historic Family Pier")) {
+					E.SetPos({ -3426.683105f, 967.7379761f, 8.346889496f });
+				}
+				if (ImGui::Button("Del Perro Pier")) {
+					E.SetPos({ -1850.126953f, -1231.750977f, 13.01709843f });
+				}
+				if (ImGui::Button("Devin Westons House")) {
+					E.SetPos({ -2639.87207f, 1866.812012f, 160.1347656f });
+				}
+				if (ImGui::Button("El Burro Heights")) {
+					E.SetPos({ 1384.0f, -2057.100098f, 51.99945831f });
+				}
+				if (ImGui::Button("Elysian Island")) {
+					E.SetPos({ 338.2000122f, -2715.899902f, 38.46731186f });
+				}
+				if (ImGui::Button("Far North San Andrea")) {
+					E.SetPos({ 24.77499962f, 7644.102051f, 19.05554962f });
+				}
+				if (ImGui::Button("Ferris Wheel")) {
+					E.SetPos({ -1670.699951f, -1125.0f, 13.03826141f });
+				}
+				if (ImGui::Button("Fort Zancudo(Opened)")) {
+					E.SetPos({ -2047.400024f, 3132.100098f, 32.80938721f });
+				}
+				if (ImGui::Button("Fort Zancudo Tower")) {
+					E.SetPos({ -2358.13208f, 3249.753906f, 101.4508438f });
+				}
+				if (ImGui::Button("Jetsam")) {
+					E.SetPos({ 760.4000244f, -2943.199951f, 5.800281525f });
+				}
+				if (ImGui::Button("Jolene Cranley-Evans Ghost")) {
+					E.SetPos({ 3059.620117f, 5564.246094f, 197.0906067f });
+				}
+				if (ImGui::Button("Korts Center")) {
+					E.SetPos({ -2243.810059f, 264.0480042f, 174.6151276f });
+				}
+				if (ImGui::Button("Marlowe Vineyards")) {
+					E.SetPos({ -1868.970947f, 2095.674072f, 139.115036f });
+				}
+				if (ImGui::Button("McKenzie Airfield")) {
+					E.SetPos({ 2121.699951f, 4796.299805f, 41.10608292f });
+				}
+				if (ImGui::Button("Merryweather Dock")) {
+					E.SetPos({ 486.4169922f, -3339.691895f, 6.069966793f });
+				}
+				if (ImGui::Button("MineShaft")) {
+					E.SetPos({ -595.34198f, 2086.008057f, 131.4120636f });
+				}
+				if (ImGui::Button("Mount Chiliad")) {
+					E.SetPos({ 450.7179871f, 5566.61377f, 806.1831055f });
+				}
+				if (ImGui::Button("Life Invader Building Roof")) {
+					E.SetPos({ -1076.370239f, -247.4655609f, 57.92191315f });
+				}
+				if (ImGui::Button("NOOSE Headquarters")) {
+					E.SetPos({ 2535.24292f, -383.7990112f, 92.99293518f });
+				}
+				if (ImGui::Button("Pacific Standard Bank")) {
+					E.SetPos({ 235.0460052f, 216.4340057f, 106.28685f });
+				}
+				if (ImGui::Button("Paleto Bay Pier")) {
+					E.SetPos({ -275.5220032f, 6635.834961f, 7.425158024f });
+				}
+				if (ImGui::Button("Play Boy Mansion")) {
+					E.SetPos({ -1475.234009f, 167.0879974f, 55.84107971f });
+				}
+				if (ImGui::Button("Police Station")) {
+					E.SetPos({ 436.4909973f, -982.1719971f, 30.69884491f });
+				}
+				if (ImGui::Button("Quarry")) {
+					E.SetPos({ 2954.196045f, 2783.409912f, 41.0033989f });
+				}
+				if (ImGui::Button("Snady Shores Airfield")) {
+					E.SetPos({ 1747.0f, 3273.699951f, 41.13830948f });
+				}
+				if (ImGui::Button("Satelite Dishes")) {
+					E.SetPos({ 2062.123047f, 2942.054932f, 47.43084335f });
+				}
+				if (ImGui::Button("Sisyphus Theater Stage")) {
+					E.SetPos({ 686.2449951f, 577.9500122f, 130.4610291f });
+				}
+				if (ImGui::Button("Meth Lab")) {
+					E.SetPos({ 1391.772949f, 3608.716064f, 38.9419632f });
+				}
+				if (ImGui::Button("Weed Farm")) {
+					E.SetPos({ 2208.7771f, 5578.234863f, 53.73509979f });
+				}
+				if (ImGui::Button("Wind Farm")) {
+					E.SetPos({ 2354.0f, 1830.300049f, 101.1442108f });
+				}
+				if (ImGui::Button("Crane Top")) {
+					E.SetPos({ -119.8789978f, -977.3569946f, 304.2489929f });
+				}
+				if (ImGui::Button("Fib Building Roof")) {
+					E.SetPos({ 150.1260071f, -754.5910034f, 262.8649902f });
+				}
+				if (ImGui::Button("Galileo Observatory Roof")) {
+					E.SetPos({ -438.8039856f, 1076.097046f, 352.4108276f });
+				}
+				if (ImGui::Button("IAA Building Roof")) {
+					E.SetPos({ 134.0850067f, -637.8590088f, 262.8510132f });
+				}
+				if (ImGui::Button("Maze Bank Roof")) {
+					E.SetPos({ -75.01499939f, -818.2150269f, 326.1759949f });
+				}
+				if (ImGui::Button("Palmer-Taylor Power Station Chimney")) {
+					E.SetPos({ 2732.930908f, 1577.540039f, 83.67098236f });
+				}
+				if (ImGui::Button("Sandy Shores Building Site Crane")) {
+					E.SetPos({ 1051.208984f, 2280.451904f, 89.72715759f });
+				}
+				if (ImGui::Button("Satelite Dish")) {
+					E.SetPos({ 2034.988037f, 2953.10498f, 74.60115051f });
+				}
+				if (ImGui::Button("UFO (Fort Zancudo)")) {
+					E.SetPos({ -2052.0f, 3237.0f, 1456.974731f });
+				}
+				if (ImGui::Button("Windmill Top")) {
+					E.SetPos({ 2026.696655f, 1842.723999f, 136.3067322f });
+				}
+				if (ImGui::Button("Train Crash Location")) {
+					E.SetPos({ -532.1309204f, 4526.187012f, 89.79542542f });
+				}
+				if (ImGui::Button("Plane Crash Location")) {
+					E.SetPos({ 2814.518066f, 4758.557129f, 47.02832413f });
+				}
+				if (ImGui::Button("Strip Club")) {
+					E.SetPos({ 131.5956573f, -1304.09082f, 29.21956253f });
+				}
+				if (ImGui::Button("Gangs")) {
+					E.SetPos({ 96.82131195f, -1952.354614f, 20.76452637f });
+				}
+				if (ImGui::Button("VineWood")) {
+					E.SetPos({ 847.9818115f,1251.696045f,356.2430115f });
+				}
+				if (ImGui::Button("Casino")) {
+					E.SetPos({ 921.6513672f,48.96141052f,80.89820099f });
+				}
+				if (ImGui::Button("Casino Roof")) {
+					E.SetPos({ 914.4961548f,57.32708359f,111.6613159f });
+				}
+				if (ImGui::Button("Casino landing zone")) {
+					E.SetPos({ 966.3134155f,44.17022705f,123.1232147f });
+				}
+				if (ImGui::Button("Suburban Clothing")) {
+					E.SetPos({ -1207.556152f,-783.2567139f,17.09370613f });
+				}
+			}
+			if (UserSettings.TpWindowMenu == 1) {
+				if (ImGui::Button("Ammunation Gun Range")) {
+					E.SetPos({ 22.15299988f, -1072.854004f, 29.79700089f });
+				}
+				if (ImGui::Button("Bank (Blaine Country)")) {
+					E.SetPos({ -109.2990036f, 6464.035156f, 31.626894f });
+				}
+				if (ImGui::Button("Bank Vault")) {
+					E.SetPos({ 255.8509979f, 217.0299988f, 101.6831741f });
+				}
+				if (ImGui::Button("Car Showroom")) {
+					E.SetPos({ -57.66149902f, -1097.594971f, 26.42238426f });
+				}
+				if (ImGui::Button("FIB Building Burnt")) {
+					E.SetPos({ 159.5529938f, -738.8510132f, 246.1520233f });
+				}
+				if (ImGui::Button("FIB Building Floor 47")) {
+					E.SetPos({ 134.572998f, -766.4860229f, 234.1519928f });
+				}
+				if (ImGui::Button("FIB Building Floor 49")) {
+					E.SetPos({ 134.6349945f, -765.8309937f, 242.1519928f });
+				}
+				if (ImGui::Button("FIB Building Top Floor")) {
+					E.SetPos({ 135.7330017f, -749.2160034f, 258.1520081f });
+				}
+				if (ImGui::Button("Humane Labs Lower Level")) {
+					E.SetPos({ 3525.495117f, 3705.301025f, 20.99192047f });
+				}
+				if (ImGui::Button("Humane Labs Upper Level")) {
+					E.SetPos({ 3618.52002f, 3755.76001f, 28.52216148f });
+				}
+				if (ImGui::Button("IAA Office")) {
+					E.SetPos({ 117.2200012f, -620.9379883f, 206.0469971f });
+				}
+				if (ImGui::Button("Janitor`s Apartment")) {
+					E.SetPos({ -110.7210007f, -8.220950127f, 70.51968384f });
+				}
+				if (ImGui::Button("Lester`s House")) {
+					E.SetPos({ 1273.897949f, -1719.303955f, 54.77117538f });
+				}
+				if (ImGui::Button("Motel Room")) {
+					E.SetPos({ 152.2599945f, -1004.469971f, -99.0f });
+				}
+				if (ImGui::Button("Omega`s Garage")) {
+					E.SetPos({ 2330.619629f, 2572.61084f, 46.68009949f });
+				}
+				if (ImGui::Button("Strip Club, Behind Bar")) {
+					E.SetPos({ 126.1211014f, -1278.512939f, 29.26957703f });
+				}
+				if (ImGui::Button("Torture Room")) {
+					E.SetPos({ 136.5140076f, -2203.149902f, 7.309140205f });
+				}
+				if (ImGui::Button("Michaels House")) {
+					E.SetPos({ -813.6030273f, 179.473999f, 72.15540314f });
+				}
+				if (ImGui::Button("Franklins House(New)")) {
+					E.SetPos({ 7.119029999f, 536.6149902f, 176.0279999f });
+				}
+				if (ImGui::Button("Franklins House(Old)")) {
+					E.SetPos({ -14.38029957f, -1438.51001f, 31.1048336f });
+				}
+				if (ImGui::Button("Trevors House")) {
+					E.SetPos({ 1972.609985f, 3817.040039f, 33.42813873f });
+				}
+				if (ImGui::Button("Trevors House 2")) {
+					E.SetPos({ -1151.77002f, -1518.140015f, 10.63270569f });
+				}
+				if (ImGui::Button("Trevors Office")) {
+					E.SetPos({ 97.27069855f, -1290.994019f, 29.26879883f });
+				}
+			}
+			if (UserSettings.TpWindowMenu == 2) {
+				sprintf_s(CurrentPointPos, 50, "Current Point Pos: X:%f", UserSettings.PointPos.x);
+				sprintf_s(YC, 50, " Y:%f", UserSettings.PointPos.z);
+				sprintf_s(ZC, 50, " Z:%f", UserSettings.PointPos.y);
+				if (ImGui::Button("Update Current")) {
+					UserSettings.XYZCustom = local->RealP->Realpos;
+				}
+				ImGui::InputFloat("X Cord", &UserSettings.XYZCustom.x);
+				ImGui::InputFloat("Y Cord", &UserSettings.XYZCustom.z);
+				ImGui::InputFloat("Z Cord", &UserSettings.XYZCustom.y);
+				if (ImGui::Button("Apply")) {
+					E.SetPos(UserSettings.XYZCustom);
+				}
+				if (ImGui::Button("Set Point")) {
+					UserSettings.PointPos = local->RealP->Realpos;
+				}
+				if (ImGui::Button("Go To Point")) {
+					E.SetPos(UserSettings.PointPos);
+				}
+				ImGui::Text(CurrentPointPos);
+				ImGui::SameLine();
+				ImGui::Text(YC);
+				ImGui::SameLine();
+				ImGui::Text(ZC);
+			}
+			ImGui::EndChild();
 		}
 		ImGui::EndChild();
 		ImGui::End();

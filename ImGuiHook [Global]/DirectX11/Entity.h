@@ -9,4 +9,5 @@ public:
 	bool Alive();
 	bool CarExist();
 	bool IsInCar();
+	void SetPos(Vector3 pos);
 };

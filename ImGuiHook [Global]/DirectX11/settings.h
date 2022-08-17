@@ -50,5 +50,10 @@ public:
 	bool KillAura = false;
 	float KillAuraDist = 6.0f;
 
+	int TpWindowMenu = 0;
+
+	Vector3 XYZCustom;
+	Vector3 PointPos;
+
 	float ESPDistance = 200;
 }UserSettings;

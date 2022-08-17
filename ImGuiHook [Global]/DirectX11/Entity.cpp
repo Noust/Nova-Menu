@@ -32,3 +32,12 @@ bool Entity::IsInCar() {
 		return true;
 	return false;
 }
+void Entity::SetPos(Vector3 pos) {
+	if (IsInCar()) {
+		local->CarPtr->CarPos->CarRealPos = pos;
+	}
+	else {
+		local->RealP->Realpos = pos;
+		local->pos = pos;
+	}
+}
