@@ -271,6 +271,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui::SliderFloat("RunSpeed", &UserSettings.runSpeed, 0, 50);
 			ImGui::SliderFloat("SwimSpeed", &UserSettings.SwimSpeed, 0, 50);
 			ImGui::SliderFloat("Car Acceleration", &UserSettings.caracceleration, 0, 100);
+			ImGui::SliderFloat("Car Gravity", &UserSettings.carGravity, 0, 500);
 		}
 		if (UserSettings.MenuWindow == 2) {
 			if (ImGui::Button("Waypoint", ImVec2(100, 25))) {
