@@ -248,8 +248,6 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			if (UserSettings.KillAura) {
 				ImGui::SliderFloat("Kill Aura Dist", &UserSettings.KillAuraDist, 1, 300);
 			}
-			ImGui::Spacing();
-			ImGui::Spacing();
 			if (ImGui::Button("Give Ammo")) {
 				if (E.Alive()) {
 					local->Weapon->Weaponptr->Weaponptr2->Weaponptr3->Weaponptr4->CurrentAmmo = 9999;
