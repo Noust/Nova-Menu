@@ -59,6 +59,8 @@ public:
 	Vector3 XYZCustom;
 	Vector3 PointPos;
 
+	bool Aimbot = false;
+
 	bool CustomValues = false;
 	float SwimSpeed = 1, runSpeed = 1, caracceleration = 1, carGravity = 9.800000191f;
 

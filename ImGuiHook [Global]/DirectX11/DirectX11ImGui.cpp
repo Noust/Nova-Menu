@@ -64,7 +64,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
 	FreeLibraryAndExitThread(hMod, 0);
@@ -74,6 +74,51 @@ Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
 	Vector4 posbone;
 	reinterpret_cast<void* (__fastcall*)(int64_t, Vector4*, int32_t)>(BoneFunc)(EntityAddr, &posbone, mask);
 	return PosToScreen({ posbone.x,posbone.y,posbone.z });
+}
+
+int FindClosestEnemy() {
+	int ClosestEntity = 1000;
+	if (E.Alive()) {
+		float Finish;
+		float Closest = FLT_MAX;
+		for (int i = 0; i < E.GetMaxEntities(); i++) {
+			DWORD64 EntityAddr = E.GetEntity(i);
+			entsA = (Entitys*)(EntityAddr);
+			if (EntityAddr != 0 && local != 0) {
+				float EnMaxHealth = entsA->MaxHealth; if (EnMaxHealth < 1 || EnMaxHealth > 999) continue;
+				float EnHealth = entsA->Health; if (EnHealth == 0) continue;
+				float Distance = local->pos.Distance(entsA->pos); if (Distance > UserSettings.ESPDistance) continue;
+				Vector2 PosScreen = PosToScreen(entsA->pos);
+				if (PosScreen.x > 0 && PosScreen.y > 0 && PosScreen.y < 1080 && PosScreen.x < 1920) {
+					Finish = PosScreen.Distance({ 1920 / 2, 1080 / 2 });
+					if (Finish < Closest) {
+						Closest = Finish;
+						ClosestEntity = i;
+					}
+				}
+			}
+		}
+	}
+	return ClosestEntity;
+}
+
+
+DWORD WINAPI Aimbot(HMODULE hMod) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
+		if (GetAsyncKeyState(VK_RBUTTON)) {
+			if (UserSettings.Aimbot) {
+				if (FindClosestEnemy() != 1000) {
+					int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
+					if (EntityAddr != 0) {
+						Vector2 posscreen = GetBonePos(EntityAddr, _HEAD_);
+						SetCursorPos(posscreen.x, posscreen.y);
+					}
+				}
+			}
+		}
+		Sleep(10);
+	}
+	FreeLibraryAndExitThread(hMod, 0);
 }
 
 namespace Process {
@@ -159,6 +204,10 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			UserSettings.BoneEsp = false;
 			UserSettings.InfiniteMissiles = false;
 			UserSettings.ShowMissiles = false;
+			UserSettings.Aimbot = false;
+			UserSettings.runSpeed = 1;
+			UserSettings.SwimSpeed = 1;
+			UserSettings.caracceleration = 1;
 			if (E.IsOpressor())
 				UserSettings.carGravity = 11.800000191f;
 			else
@@ -166,6 +215,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Best Configuration")) {
+			UserSettings.Aimbot = true;
 			UserSettings.CustomValues = true;
 			UserSettings.Godmode = true;
 			UserSettings.CarGodMode = true;
@@ -293,6 +343,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 150);
 		}
 		if (UserSettings.MenuWindow == 1) {
+			ImGui::Checkbox("Aimbot", &UserSettings.Aimbot);
 			ImGui::Checkbox("GodMode", &UserSettings.Godmode);
 			ImGui::Checkbox("Car GodMode", &UserSettings.CarGodMode);
 			ImGui::Checkbox("Never Wanted", &UserSettings.NeverWanted);
@@ -845,7 +896,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
 	if (HookAddr != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
@@ -872,6 +923,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved) {
 			StartFunc(hModule, (LPTHREAD_START_ROUTINE)MainThread);
 			StartFunc(hModule, (LPTHREAD_START_ROUTINE)InitiateHooks);
 			StartFunc(hModule, (LPTHREAD_START_ROUTINE)SetValues);
+			StartFunc(hModule, (LPTHREAD_START_ROUTINE)Aimbot);
 		}
 		break;
 	default:

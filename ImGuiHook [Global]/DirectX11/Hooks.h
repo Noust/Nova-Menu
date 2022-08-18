@@ -166,6 +166,7 @@ Entitys* ents;
 Entitys* local;
 Entitys* ents3;
 Entitys* entsK;
+Entitys* entsA;
 
 __declspec(naked) void GetView() {
 	__asm{
