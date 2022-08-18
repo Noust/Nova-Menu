@@ -39,3 +39,7 @@ bool OnPause() {
 		return true;
 	return false;
 }
+
+void SetMouseMode(int8_t MouseMode) {
+	*(int8_t*)((DWORD64)GetModuleHandleA("GTA5.exe") + 0x2DA5FE0) = MouseMode;
+}

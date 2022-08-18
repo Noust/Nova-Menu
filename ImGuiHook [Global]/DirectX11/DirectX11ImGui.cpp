@@ -18,7 +18,7 @@ char YC[50];
 char ZC[50];
 char OMissiles[50];
 char NPCT[] = "NPC";
-char PLAYERT[] = "PLAYER";
+char PLAYERT[] = "PLAYER"; 
 Vector2 SnapLineBegin = { 1920 / 2,1080 };
 
 void Colors() {
@@ -41,6 +41,9 @@ void Colors() {
 //Address of signature = GTA5.exe + 0x007904F0
 //"\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8", "xxx????xx????x"
 //"41 81 E8 ? ? ? ? 0F 84 ? ? ? ? B8"
+//Address of signature = GTA5.exe + 0x01391F2F
+//"\x89\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8B\x05\x00\x00\x00\x00\xBB", "xx????x????xx????x"
+//"89 0D ? ? ? ? E8 ? ? ? ? 8B 05 ? ? ? ? BB"
 
 DWORD WINAPI InitiateHooks(HMODULE hMod) {
 	while (!hooked) {
@@ -77,24 +80,22 @@ Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
 }
 
 int FindClosestEnemy() {
-	int ClosestEntity = 1000;
+	int ClosestEntity = 0;
 	if (E.Alive()) {
 		float Finish;
 		float Closest = FLT_MAX;
 		for (int i = 0; i < E.GetMaxEntities(); i++) {
 			DWORD64 EntityAddr = E.GetEntity(i);
-			entsA = (Entitys*)(EntityAddr);
 			if (EntityAddr != 0 && local != 0) {
-				float EnMaxHealth = entsA->MaxHealth; if (EnMaxHealth < 1 || EnMaxHealth > 999) continue;
+				entsA = (Entitys*)(EntityAddr);
+				float EnMaxHealth = entsA->MaxHealth; if (EnMaxHealth < 11 || EnMaxHealth > 900) continue;
 				float EnHealth = entsA->Health; if (EnHealth == 0) continue;
+				Vector2 PosScreen = PosToScreen(entsA->pos); if (PosScreen.Distance({ 1920 / 2, 1080 / 2 }) > UserSettings.AimbotFov) continue;
 				float Distance = local->pos.Distance(entsA->pos); if (Distance > UserSettings.ESPDistance) continue;
-				Vector2 PosScreen = PosToScreen(entsA->pos);
-				if (PosScreen.x > 0 && PosScreen.y > 0 && PosScreen.y < 1080 && PosScreen.x < 1920) {
-					Finish = PosScreen.Distance({ 1920 / 2, 1080 / 2 });
-					if (Finish < Closest) {
-						Closest = Finish;
-						ClosestEntity = i;
-					}
+				Finish = PosScreen.Distance({ 1920 / 2, 1080 / 2 });
+				if (Finish < Closest) {
+					Closest = Finish;
+					ClosestEntity = i;
 				}
 			}
 		}
@@ -105,18 +106,16 @@ int FindClosestEnemy() {
 
 DWORD WINAPI Aimbot(HMODULE hMod) {
 	while (!GetAsyncKeyState(VK_DELETE)) {
-		if (GetAsyncKeyState(VK_RBUTTON)) {
-			if (UserSettings.Aimbot) {
-				if (FindClosestEnemy() != 1000) {
-					int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
-					if (EntityAddr != 0) {
-						Vector2 posscreen = GetBonePos(EntityAddr, _HEAD_);
-						SetCursorPos(posscreen.x, posscreen.y);
-					}
+		if (UserSettings.Aimbot && hooked && !OnPause() && !ShowMenu) {
+			if (GetAsyncKeyState(VK_RBUTTON)) {
+				int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
+				if (EntityAddr != 0) {
+					Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
+					SetCursorPos(AimbottargetScreen.x, AimbottargetScreen.y);
 				}
 			}
 		}
-		Sleep(10);
+		Sleep(15);
 	}
 	FreeLibraryAndExitThread(hMod, 0);
 }
@@ -205,6 +204,8 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			UserSettings.InfiniteMissiles = false;
 			UserSettings.ShowMissiles = false;
 			UserSettings.Aimbot = false;
+			UserSettings.ShowFov = false;
+			UserSettings.ShowTarget = false;
 			UserSettings.runSpeed = 1;
 			UserSettings.SwimSpeed = 1;
 			UserSettings.caracceleration = 1;
@@ -215,7 +216,6 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Best Configuration")) {
-			UserSettings.Aimbot = true;
 			UserSettings.CustomValues = true;
 			UserSettings.Godmode = true;
 			UserSettings.CarGodMode = true;
@@ -344,6 +344,40 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		}
 		if (UserSettings.MenuWindow == 1) {
 			ImGui::Checkbox("Aimbot", &UserSettings.Aimbot);
+			if (UserSettings.Aimbot) {
+				ImGui::Text("Target");
+				if (ImGui::Button("Head")) {
+					UserSettings.AimbotTarget = _HEAD_;
+				}
+				if (ImGui::Button("Stomach")) {
+					UserSettings.AimbotTarget = _STOMACH_;
+				}
+				if (ImGui::Button("Right Hand")) {
+					UserSettings.AimbotTarget = _RIGHTHAND_;
+				}
+				if (ImGui::Button("Left Hand")) {
+					UserSettings.AimbotTarget = _LEFTHAND_;
+				}
+				if (ImGui::Button("Right Foot")) {
+					UserSettings.AimbotTarget = _RIGHTFOOTBACK_;
+				}
+				if (ImGui::Button("Left Foot")) {
+					UserSettings.AimbotTarget = _LEFTFOOTBACK_;
+				}
+				ImGui::Checkbox("Show Aimbot Fov", &UserSettings.ShowFov);
+				if (UserSettings.ShowFov) {
+					ImGui::SliderInt("Thickness Fov", &UserSettings.FovThickness, 1, 10);
+					ImGui::ColorEdit4("Fov Color", (float*)(&UserSettings.FovColor));
+				}
+				ImGui::SliderInt("Aimbot Fov", &UserSettings.AimbotFov, 1, 1920);
+				ImGui::Checkbox("Show Target", &UserSettings.ShowTarget);
+				if (UserSettings.ShowTarget)
+				{
+					ImGui::SliderInt("Thickness target line", &UserSettings.TargetThickness, 1, 10);
+					ImGui::ColorEdit4("Target color", (float*)(&UserSettings.TargetColor));
+				}
+				ImGui::Separator();
+			}
 			ImGui::Checkbox("GodMode", &UserSettings.Godmode);
 			ImGui::Checkbox("Car GodMode", &UserSettings.CarGodMode);
 			ImGui::Checkbox("Never Wanted", &UserSettings.NeverWanted);
@@ -849,6 +883,26 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					}
 				}
 			}
+		}
+		if (UserSettings.Aimbot) {
+			if (UserSettings.ShowFov) {
+				DrawCircle({ 1920 / 2, 1080 / 2 }, UserSettings.FovColor, UserSettings.AimbotFov, UserSettings.FovThickness);
+			}
+			if (UserSettings.ShowTarget) {
+				int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
+				if (EntityAddr != 0) {
+					Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
+					if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
+						DrawLine({ 1920 / 2, 1080 / 2 }, AimbottargetScreen, UserSettings.TargetColor, UserSettings.TargetThickness);
+					}
+				}
+			}
+		}
+		if (ShowMenu) {
+			SetMouseMode(0);
+		}
+		else {
+			SetMouseMode(2);
 		}
 	}
 	ImGui::EndFrame();

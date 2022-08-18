@@ -60,6 +60,15 @@ public:
 	Vector3 PointPos;
 
 	bool Aimbot = false;
+	bool onlyPlayers = false;
+	int32_t AimbotTarget = 0x796E;
+	int AimbotFov = 1920;
+	bool ShowFov = false;
+	int FovThickness = 0;
+	ImColor FovColor = { 255,255,255 };
+	bool ShowTarget = false;
+	int TargetThickness = 0;
+	ImColor TargetColor = { 255,0,0 };
 
 	bool CustomValues = false;
 	float SwimSpeed = 1, runSpeed = 1, caracceleration = 1, carGravity = 9.800000191f;
