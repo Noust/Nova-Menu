@@ -64,7 +64,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		Sleep(500);
 	}
 	FreeLibraryAndExitThread(hMod, 0);
@@ -177,8 +177,11 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			UserSettings.HP = true;
 			UserSettings.Type = true;
 			UserSettings.BoneEsp = true;
-			if (!E.IsOpressor())
+			if (!E.IsOpressor()) {
+				UserSettings.InfiniteMissiles = false;
+				UserSettings.ShowMissiles = false;
 				UserSettings.carGravity = 79.0f;
+			}
 			else {
 				UserSettings.InfiniteMissiles = true;
 				UserSettings.ShowMissiles = true;
@@ -345,15 +348,15 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				}
 			}
 			ImGui::Separator();
-			if (ImGui::Button("Places")) {
+			if (ImGui::Button("Places", ImVec2(100, 25))) {
 				UserSettings.TpWindowMenu = 0;
 			}
 			ImGui::SameLine();
-			if (ImGui::Button("Interiors")) {
+			if (ImGui::Button("Interiors", ImVec2(100, 25))) {
 				UserSettings.TpWindowMenu = 1;
 			}
 			ImGui::SameLine();
-			if (ImGui::Button("Custom XYZ")) {
+			if (ImGui::Button("Custom XYZ", ImVec2(100, 25))) {
 				UserSettings.XYZCustom = local->RealP->Realpos;
 				UserSettings.TpWindowMenu = 2;
 			}
@@ -842,7 +845,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		Sleep(500);
 	}
 	if (HookAddr != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
