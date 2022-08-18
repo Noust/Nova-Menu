@@ -752,7 +752,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 									}
 								}
 							}
-							if (UserSettings.Name) {
+							if (UserSettings.Name && ents->PlayerInfoPtr != 0) {
 								Vector3 pos3 = ents->pos;
 								pos3.z -= 1.4f;
 								Vector2 posscreen3 = PosToScreen(pos3);
