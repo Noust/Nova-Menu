@@ -23,16 +23,16 @@ Vector2 SnapLineBegin = { 1920 / 2,1080 };
 
 void Colors() {
 	ImGuiStyle& style = ImGui::GetStyle();
-	style.WindowPadding = ImVec2(10, 10);
-	style.WindowRounding = 5.0f;
-	style.ChildRounding = 5.0f;
-	style.FramePadding = ImVec2(5, 5);
-	style.FrameRounding = 4.0f;
-	style.ItemSpacing = ImVec2(12, 8);
-	style.ItemInnerSpacing = ImVec2(8, 6);
+	style.WindowPadding = ImVec2(11, 12);
+	style.FramePadding = ImVec2(14, 3);
+	style.ItemSpacing = ImVec2(8, 7);
+	style.ItemInnerSpacing = ImVec2(12, 6);
+	style.WindowRounding = 7.0f;
+	style.ChildRounding = 7.0f;
+	style.FrameRounding = 12.0f;
+	style.ScrollbarRounding = 12.0f;
 	style.IndentSpacing = 25.0f;
-	style.ScrollbarSize = 15.0f;
-	style.ScrollbarRounding = 9.0f;
+	style.ScrollbarSize = 14.0f;
 	style.GrabMinSize = 5.0f;
 	style.GrabRounding = 3.0f;
 	style.WindowMinSize = ImVec2(783, 508);
