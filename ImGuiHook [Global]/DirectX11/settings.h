@@ -61,6 +61,7 @@ public:
 
 	bool Aimbot = false;
 	bool onlyPlayers = false;
+	float miniumHealth = 11;
 	int32_t AimbotTarget = 0x796E;
 	int AimbotFov = 1920;
 	bool ShowFov = false;

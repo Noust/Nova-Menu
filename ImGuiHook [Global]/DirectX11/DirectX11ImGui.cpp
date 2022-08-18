@@ -110,8 +110,10 @@ DWORD WINAPI Aimbot(HMODULE hMod) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
 				int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
 				if (EntityAddr != 0) {
-					Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
-					SetCursorPos(AimbottargetScreen.x, AimbottargetScreen.y);
+					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth) {
+						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
+						SetCursorPos(AimbottargetScreen.x, AimbottargetScreen.y);
+					}
 				}
 			}
 		}
@@ -187,6 +189,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::BeginChild("##Custom", ImVec2(ImGui::GetContentRegionAvail().x, 43), true);
 		if (ImGui::Button("Disable All")) {
 			UserSettings.CustomValues = false;
+			UserSettings.onlyPlayers = false;
 			UserSettings.Godmode = false;
 			UserSettings.CarGodMode = false;
 			UserSettings.NeverWanted = false;
@@ -345,6 +348,13 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		if (UserSettings.MenuWindow == 1) {
 			ImGui::Checkbox("Aimbot", &UserSettings.Aimbot);
 			if (UserSettings.Aimbot) {
+				ImGui::Checkbox("Only Players", &UserSettings.onlyPlayers);
+				if (UserSettings.onlyPlayers) {
+					UserSettings.miniumHealth = 201;
+				}
+				else {
+					UserSettings.miniumHealth = 11;
+				}
 				ImGui::Text("Target");
 				if (ImGui::Button("Head")) {
 					UserSettings.AimbotTarget = _HEAD_;
@@ -891,9 +901,11 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			if (UserSettings.ShowTarget) {
 				int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
 				if (EntityAddr != 0) {
-					Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
-					if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
-						DrawLine({ 1920 / 2, 1080 / 2 }, AimbottargetScreen, UserSettings.TargetColor, UserSettings.TargetThickness);
+					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth) {
+						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
+						if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
+							DrawLine({ 1920 / 2, 1080 / 2 }, AimbottargetScreen, UserSettings.TargetColor, UserSettings.TargetThickness);
+						}
 					}
 				}
 			}
