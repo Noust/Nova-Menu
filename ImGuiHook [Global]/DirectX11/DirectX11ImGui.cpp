@@ -110,7 +110,7 @@ DWORD WINAPI Aimbot(HMODULE hMod) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
 				int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
 				if (EntityAddr != 0) {
-					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth) {
+					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x280) != 0) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
 						SetCursorPos(AimbottargetScreen.x, AimbottargetScreen.y);
 					}
@@ -901,7 +901,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			if (UserSettings.ShowTarget) {
 				int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
 				if (EntityAddr != 0) {
-					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth) {
+					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x280) != 0) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
 						if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
 							DrawLine({ 1920 / 2, 1080 / 2 }, AimbottargetScreen, UserSettings.TargetColor, UserSettings.TargetThickness);
