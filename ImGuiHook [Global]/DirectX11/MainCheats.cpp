@@ -4,7 +4,7 @@ bool initiate1 = false;
 
 DWORD WINAPI SetValues(HMODULE hMod) {
 	Entity E;
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		if (hooked) {
 			local = (Entitys*)(E.GetLocalPlayer());
 			if (local != 0 && !OnPause()) {
@@ -84,8 +84,12 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 					}
 				}
 				if (UserSettings.NeverWanted && !ShowMenu && local->PlayerInfoPtr != 0) {
-					if (local->PlayerInfoPtr->WantedLevel = 0)
+					if (local->PlayerInfoPtr->WantedLevel != 0)
 						local->PlayerInfoPtr->WantedLevel = 0;
+				}
+				if (UserSettings.InfiniteMissiles && !ShowMenu && E.IsOpressor()) {
+					if (local->CarPtr->OpressorMisiles != 45)
+						local->CarPtr->OpressorMisiles = 45;
 				}
 			}
 		}

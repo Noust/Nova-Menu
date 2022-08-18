@@ -54,7 +54,9 @@ class Car
 public:
 	char pad_0000[48]; //0x0000
 	class CarRP* CarPos; //0x0030
-	char pad_0038[337]; //0x0038
+	char pad_0038[88]; //0x0038
+	Vector3 pos; //0x0090
+	char pad_009C[237]; //0x009C
 	bool GodMode; //0x0189
 	char pad_018A[1918]; //0x018A
 	float Health; //0x0908
@@ -62,7 +64,10 @@ public:
 	class CustomCar* CarCustom; //0x0938
 	char pad_0940[796]; //0x0940
 	float GravityCar; //0x0C5C
-	char pad_0C60[3076]; //0x0C60
+	char pad_0C60[1604]; //0x0C60
+	int32_t OpressorMisiles; //0x12A4
+	char pad_12A8[76]; //0x12A8
+
 }; //Size: 0x1864
 
 class PlayerInfo

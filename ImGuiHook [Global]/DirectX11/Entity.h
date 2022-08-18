@@ -10,4 +10,5 @@ public:
 	bool CarExist();
 	bool IsInCar();
 	void SetPos(Vector3 pos);
+	bool IsOpressor();
 };

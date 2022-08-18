@@ -16,6 +16,7 @@ char Distances[50];
 char CurrentPointPos[50];
 char YC[50];
 char ZC[50];
+char OMissiles[50];
 char NPCT[] = "NPC";
 char PLAYERT[] = "PLAYER";
 Vector2 SnapLineBegin = { 1920 / 2,1080 };
@@ -63,7 +64,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
 	FreeLibraryAndExitThread(hMod, 0);
@@ -142,7 +143,6 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::BeginChild("##Custom", ImVec2(ImGui::GetContentRegionAvail().x, 43), true);
 		if (ImGui::Button("Disable All")) {
 			UserSettings.CustomValues = false;
-			UserSettings.carGravity = 9.800000191f;
 			UserSettings.Godmode = false;
 			UserSettings.CarGodMode = false;
 			UserSettings.NeverWanted = false;
@@ -157,11 +157,16 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			UserSettings.Esp3d = false;
 			UserSettings.BoxEsp = false;
 			UserSettings.BoneEsp = false;
+			UserSettings.InfiniteMissiles = false;
+			UserSettings.ShowMissiles = false;
+			if (E.IsOpressor())
+				UserSettings.carGravity = 11.800000191f;
+			else
+				UserSettings.carGravity = 9.800000191f;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Best Configuration")) {
 			UserSettings.CustomValues = true;
-			UserSettings.carGravity = 79.0f;
 			UserSettings.Godmode = true;
 			UserSettings.CarGodMode = true;
 			UserSettings.NeverWanted = true;
@@ -172,6 +177,13 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			UserSettings.HP = true;
 			UserSettings.Type = true;
 			UserSettings.BoneEsp = true;
+			if (!E.IsOpressor())
+				UserSettings.carGravity = 79.0f;
+			else {
+				UserSettings.InfiniteMissiles = true;
+				UserSettings.ShowMissiles = true;
+				UserSettings.carGravity = 9.800000191f;
+			}
 		}
 		ImGui::EndChild();
 		ImGui::BeginChild("##leftside", ImVec2(200, ImGui::GetContentRegionAvail().y), true);
@@ -269,6 +281,11 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::ColorEdit4("Name Player Color", (float*)(&UserSettings.PlayerNameColor));
 				ImGui::Separator();
 			}
+			ImGui::Checkbox("Show Opressor Missiles", &UserSettings.ShowMissiles);
+			if (UserSettings.ShowMissiles) {
+				ImGui::ColorEdit4("Missiles Color", (float*)(&UserSettings.MissilesColor));
+				ImGui::Separator();
+			}
 			ImGui::Separator();
 			ImGui::SliderFloat("ESP Distance", &UserSettings.ESPDistance, 1, 150);
 		}
@@ -278,6 +295,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui::Checkbox("Never Wanted", &UserSettings.NeverWanted);
 			ImGui::Checkbox("Infinite Ammo", &UserSettings.InfAmmo);
 			ImGui::Checkbox("No Car Collision", &UserSettings.nocarcollision);
+			ImGui::Checkbox("Oppressor Infinite Missiles", &UserSettings.InfiniteMissiles);
 			ImGui::Checkbox("Kill Aura", &UserSettings.KillAura);
 			if (UserSettings.KillAura) {
 				ImGui::SliderFloat("Kill Aura Dist", &UserSettings.KillAuraDist, 1, 300);
@@ -303,7 +321,10 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					UserSettings.runSpeed = 1;
 					UserSettings.SwimSpeed = 1;
 					UserSettings.caracceleration = 1;
-					UserSettings.carGravity = 9.800000191f;
+					if (E.IsOpressor())
+						UserSettings.carGravity = 11.800000191f;
+					else
+						UserSettings.carGravity = 9.800000191f;
 				}
 				ImGui::SliderFloat("RunSpeed", &UserSettings.runSpeed, 0, 50);
 				ImGui::SliderFloat("SwimSpeed", &UserSettings.SwimSpeed, 0, 50);
@@ -625,7 +646,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::End();
 	}
 	if (hooked && !OnPause()) {
-		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name) {
+		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name || UserSettings.ShowMissiles) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				int64_t EntityAddr = E.GetEntity(i);
 				ents = (Entitys*)(EntityAddr);
@@ -764,6 +785,14 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 							}
 						}
 					}
+					if (UserSettings.ShowMissiles && E.IsOpressor()) {
+						Vector3 pos3 = local->CarPtr->pos;
+						Vector2 posscreen3 = PosToScreen(pos3);
+						if (posscreen3.x > 0 && posscreen3.y > 0 && posscreen3.x < 1920 && posscreen3.y < 1080) {
+							sprintf_s(OMissiles, 50, "Missiles:%d", local->CarPtr->OpressorMisiles);
+							DrawChar(posscreen3, OMissiles, UserSettings.MissilesColor, 2);
+						}
+					}
 				}
 			}
 		}
@@ -813,7 +842,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
 	if (HookAddr != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {

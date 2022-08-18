@@ -42,12 +42,16 @@ public:
 	bool Name = false;
 	ImColor PlayerNameColor = { 0,0,255 };
 
+	bool ShowMissiles = false;
+	ImColor MissilesColor = { 255,255,255 };
+
 	bool Godmode = false;
 	bool CarGodMode = false;
 	bool NeverWanted = false;
 	bool InfAmmo = false;
 	bool nocarcollision = false;
 	bool KillAura = false;
+	bool InfiniteMissiles = false;
 	float KillAuraDist = 6.0f;
 
 	int TpWindowMenu = 0;

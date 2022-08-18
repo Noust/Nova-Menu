@@ -36,3 +36,10 @@ void Entity::SetPos(Vector3 pos) {
 		local->pos = pos;
 	}
 }
+bool Entity::IsOpressor() {
+	if (IsInCar()) {
+		if (local->CarPtr->OpressorMisiles != -1)
+			return true;
+	}
+	return false;
+}
