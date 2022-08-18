@@ -69,15 +69,15 @@ class PlayerInfo
 {
 public:
 	char pad_0000[164]; //0x0000
-	char Names[25]; //0x00A4
-	char pad_00BD[179]; //0x00BD
+	char Names[35]; //0x00A4
+	char pad_00C7[169]; //0x00C7
 	float SwimSpeed; //0x0170
 	char pad_0174[1812]; //0x0174
 	int32_t WantedLevel; //0x0888
 	char pad_088C[1124]; //0x088C
 	float RunSpeed; //0x0CF0
 	float StaminaMax; //0x0CF4
-	char pad_0CF8[5264]; //0x0CF8
+	char pad_0CF8[8]; //0x0CF8
 }; //Size: 0x2188
 
 class WeaponManager
