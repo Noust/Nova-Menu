@@ -70,6 +70,7 @@ public:
 	bool ShowTarget = false;
 	int TargetThickness = 0;
 	ImColor TargetColor = { 255,0,0 };
+	int AimbotSleep = 16;
 
 	bool CustomValues = false;
 	float SwimSpeed = 1, runSpeed = 1, caracceleration = 1, carGravity = 9.800000191f;

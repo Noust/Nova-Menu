@@ -19,6 +19,7 @@ char ZC[50];
 char OMissiles[50];
 char NPCT[] = "NPC";
 char PLAYERT[] = "PLAYER"; 
+int Closest;
 Vector2 SnapLineBegin = { 1920 / 2,1080 };
 
 void Colors() {
@@ -45,40 +46,6 @@ void Colors() {
 //"\x89\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8B\x05\x00\x00\x00\x00\xBB", "xx????x????xx????x"
 //"89 0D ? ? ? ? E8 ? ? ? ? 8B 05 ? ? ? ? BB"
 
-DWORD WINAPI InitiateHooks(HMODULE hMod) {
-	while (!hooked) {
-		char modulename[] = "GTA5.exe";
-		char sig[] = "\xF3\x0F\x00\x00\x00\x0F\x28\x00\x0F\x28\x00\x00\x0F\x28\x00\x00\xF3\x0F";
-		char mask[] = "xx???xx?xx??xx??xx";
-		char sig1[] = "\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8";
-		char mask1[] = "xxx????xx????x";
-		char sig2[] = "\x66\x45\x00\x00\x00\x74\x00\x41\x0F\x00\x00\x00\x49\x8B";
-		char mask2[] = "xx???x?xx???xx";
-		char sig3[] = "\x89\x5F\x00\x48\x8B\x00\x00\x00\x48\x8B\x00\x00\x00\x48\x8B\x00\x00\x00\x48\x83\xC4\x00\x5F\xC3\xCC\x2D";
-		char mask3[] = "xx?xx???xx???xx???xxx?xxxx";
-		HookAddr = FindPattern(modulename, sig, mask);
-		BoneFunc = FindPattern(modulename, sig1, mask1);
-		PatchAddr = FindPattern(modulename, sig2, mask2);
-		PatchAddr1 = FindPattern(modulename, sig3, mask3);
-		int HookLength = 16;
-		jmpback = HookAddr + HookLength;
-		if (HookAddr != NULL && BoneFunc != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
-			Hook((BYTE*)HookAddr, (BYTE*)GetView, HookLength);
-			hooked = true;
-		}
-	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
-		Sleep(500);
-	}
-	FreeLibraryAndExitThread(hMod, 0);
-}
-
-Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
-	Vector4 posbone;
-	reinterpret_cast<void* (__fastcall*)(int64_t, Vector4*, int32_t)>(BoneFunc)(EntityAddr, &posbone, mask);
-	return PosToScreen({ posbone.x,posbone.y,posbone.z });
-}
-
 int FindClosestEnemy() {
 	int ClosestEntity = 0;
 	if (E.Alive()) {
@@ -103,12 +70,49 @@ int FindClosestEnemy() {
 	return ClosestEntity;
 }
 
+DWORD WINAPI InitiateHooks(HMODULE hMod) {
+	while (!hooked) {
+		char modulename[] = "GTA5.exe";
+		char sig[] = "\xF3\x0F\x00\x00\x00\x0F\x28\x00\x0F\x28\x00\x00\x0F\x28\x00\x00\xF3\x0F";
+		char mask[] = "xx???xx?xx??xx??xx";
+		char sig1[] = "\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8";
+		char mask1[] = "xxx????xx????x";
+		char sig2[] = "\x66\x45\x00\x00\x00\x74\x00\x41\x0F\x00\x00\x00\x49\x8B";
+		char mask2[] = "xx???x?xx???xx";
+		char sig3[] = "\x89\x5F\x00\x48\x8B\x00\x00\x00\x48\x8B\x00\x00\x00\x48\x8B\x00\x00\x00\x48\x83\xC4\x00\x5F\xC3\xCC\x2D";
+		char mask3[] = "xx?xx???xx???xx???xxx?xxxx";
+		HookAddr = FindPattern(modulename, sig, mask);
+		BoneFunc = FindPattern(modulename, sig1, mask1);
+		PatchAddr = FindPattern(modulename, sig2, mask2);
+		PatchAddr1 = FindPattern(modulename, sig3, mask3);
+		int HookLength = 16;
+		jmpback = HookAddr + HookLength;
+		if (HookAddr != NULL && BoneFunc != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
+			Hook((BYTE*)HookAddr, (BYTE*)GetView, HookLength);
+			hooked = true;
+		}
+	}
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+		if (UserSettings.Aimbot) {
+			Closest = FindClosestEnemy();
+		}
+		Sleep(1);
+	}
+	FreeLibraryAndExitThread(hMod, 0);
+}
+
+Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
+	Vector4 posbone;
+	reinterpret_cast<void* (__fastcall*)(int64_t, Vector4*, int32_t)>(BoneFunc)(EntityAddr, &posbone, mask);
+	return PosToScreen({ posbone.x,posbone.y,posbone.z });
+}
+
 
 DWORD WINAPI Aimbot(HMODULE hMod) {
 	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		if (UserSettings.Aimbot && hooked && !OnPause() && !ShowMenu) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
-				int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
+				int64_t EntityAddr = E.GetEntity(Closest);
 				if (EntityAddr != 0) {
 					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x280) != 0) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
@@ -117,7 +121,7 @@ DWORD WINAPI Aimbot(HMODULE hMod) {
 				}
 			}
 		}
-		Sleep(15);
+		Sleep(UserSettings.AimbotSleep);
 	}
 	FreeLibraryAndExitThread(hMod, 0);
 }
@@ -386,6 +390,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					ImGui::SliderInt("Thickness target line", &UserSettings.TargetThickness, 1, 10);
 					ImGui::ColorEdit4("Target color", (float*)(&UserSettings.TargetColor));
 				}
+				ImGui::SliderInt("Aimbot Sleep", &UserSettings.AimbotSleep, 1, 25);
 				ImGui::Separator();
 			}
 			ImGui::Checkbox("GodMode", &UserSettings.Godmode);
