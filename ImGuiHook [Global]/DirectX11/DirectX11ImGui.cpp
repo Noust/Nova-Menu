@@ -67,7 +67,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		Sleep(500);
 	}
 	FreeLibraryAndExitThread(hMod, 0);
@@ -105,7 +105,7 @@ int FindClosestEnemy() {
 
 
 DWORD WINAPI Aimbot(HMODULE hMod) {
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		if (UserSettings.Aimbot && hooked && !OnPause() && !ShowMenu) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
 				int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
@@ -744,7 +744,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::End();
 	}
 	if (hooked && !OnPause()) {
-		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name || UserSettings.ShowMissiles) {
+		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				int64_t EntityAddr = E.GetEntity(i);
 				ents = (Entitys*)(EntityAddr);
@@ -883,15 +883,15 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 							}
 						}
 					}
-					if (UserSettings.ShowMissiles && E.IsOpressor()) {
-						Vector3 pos3 = local->CarPtr->pos;
-						Vector2 posscreen3 = PosToScreen(pos3);
-						if (posscreen3.x > 0 && posscreen3.y > 0 && posscreen3.x < 1920 && posscreen3.y < 1080) {
-							sprintf_s(OMissiles, 50, "Missiles:%d", local->CarPtr->OpressorMisiles);
-							DrawChar(posscreen3, OMissiles, UserSettings.MissilesColor, 2);
-						}
-					}
 				}
+			}
+		}
+		if (UserSettings.ShowMissiles && E.IsOpressor() && local != 0) {
+			Vector3 pos3 = local->CarPtr->pos;
+			Vector2 posscreen3 = PosToScreen(pos3);
+			if (posscreen3.x > 0 && posscreen3.y > 0 && posscreen3.x < 1920 && posscreen3.y < 1080) {
+				sprintf_s(OMissiles, 50, "Missiles:%d", local->CarPtr->OpressorMisiles);
+				DrawChar(posscreen3, OMissiles, UserSettings.MissilesColor, 2);
 			}
 		}
 		if (UserSettings.Aimbot) {
@@ -962,7 +962,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		Sleep(500);
 	}
 	if (HookAddr != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
