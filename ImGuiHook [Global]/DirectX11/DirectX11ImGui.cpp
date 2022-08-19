@@ -57,8 +57,8 @@ int FindClosestEnemy() {
 				entsA = (Entitys*)(EntityAddr);
 				float EnMaxHealth = entsA->MaxHealth; if (EnMaxHealth < 11 || EnMaxHealth > 900) continue;
 				float EnHealth = entsA->Health; if (EnHealth == 0) continue;
-				Vector2 PosScreen = PosToScreen(entsA->pos); if (PosScreen.Distance({ 1920 / 2, 1080 / 2 }) > UserSettings.AimbotFov) continue;
 				float Distance = local->pos.Distance(entsA->pos); if (Distance > UserSettings.ESPDistance) continue;
+				Vector2 PosScreen = PosToScreen(entsA->pos);
 				Finish = PosScreen.Distance({ 1920 / 2, 1080 / 2 });
 				if (Finish < Closest) {
 					Closest = Finish;
@@ -116,7 +116,9 @@ DWORD WINAPI Aimbot(HMODULE hMod) {
 				if (EntityAddr != 0) {
 					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x280) != 0) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
-						SetCursorPos(AimbottargetScreen.x, AimbottargetScreen.y);
+						if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
+							SetCursorPos(AimbottargetScreen.x, AimbottargetScreen.y);
+						}
 					}
 				}
 			}
