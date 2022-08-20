@@ -55,7 +55,7 @@ int FindClosestEnemy() {
 			DWORD64 EntityAddr = E.GetEntity(i);
 			if (EntityAddr != 0 && local != 0) {
 				entsA = (Entitys*)(EntityAddr);
-				float EnMaxHealth = entsA->MaxHealth; if (EnMaxHealth < 11 || EnMaxHealth > 900) continue;
+				float EnMaxHealth = entsA->MaxHealth; if (EnMaxHealth < UserSettings.miniumHealth || EnMaxHealth > UserSettings.MaxHealth) continue;
 				float EnHealth = entsA->Health; if (EnHealth == 0) continue;
 				float Distance = local->pos.Distance(entsA->pos); if (Distance > UserSettings.ESPDistance) continue;
 				Vector2 PosScreen = PosToScreen(entsA->pos);
@@ -919,7 +919,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				DrawCircle({ 1920 / 2, 1080 / 2 }, UserSettings.FovColor, UserSettings.AimbotFov, UserSettings.FovThickness);
 			}
 			if (UserSettings.ShowTarget) {
-				int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
+				int64_t EntityAddr = E.GetEntity(Closest);
 				if (EntityAddr != 0) {
 					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x2A0) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
