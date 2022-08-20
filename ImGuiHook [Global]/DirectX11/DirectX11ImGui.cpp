@@ -195,6 +195,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::BeginChild("##Custom", ImVec2(ImGui::GetContentRegionAvail().x, 43), true);
 		if (ImGui::Button("Disable All")) {
 			UserSettings.CustomValues = false;
+			UserSettings.NoRadgoll = false;
 			UserSettings.onlyPlayers = false;
 			UserSettings.Godmode = false;
 			UserSettings.CarGodMode = false;
@@ -226,6 +227,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::SameLine();
 		if (ImGui::Button("Best Configuration")) {
 			UserSettings.CustomValues = true;
+			UserSettings.NoRadgoll = true;
 			UserSettings.Godmode = true;
 			UserSettings.CarGodMode = true;
 			UserSettings.NeverWanted = true;
@@ -409,6 +411,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::Separator();
 			}
 			ImGui::Checkbox("GodMode", &UserSettings.Godmode);
+			ImGui::Checkbox("No Radgoll", &UserSettings.NoRadgoll);
 			ImGui::Checkbox("Car GodMode", &UserSettings.CarGodMode);
 			ImGui::Checkbox("Never Wanted", &UserSettings.NeverWanted);
 			ImGui::Checkbox("Infinite Ammo", &UserSettings.InfAmmo);
@@ -906,7 +909,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				}
 			}
 		}
-		if (UserSettings.TpWindowMenu == 2) {
+		if (UserSettings.TpWindowMenu == 2 && UserSettings.MenuWindow == 2 && ShowMenu) {
 			Vector3 pos3 = local->pos;
 			Vector3 pos4 = local->pos;
 			Vector3 pos5 = local->pos;
@@ -964,6 +967,10 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		}
 		else {
 			SetMouseMode(2);
+		}
+		if (UserSettings.MenuWindow == 2) {
+			if (local->radgoll != 32)
+				local->radgoll = 32;
 		}
 	}
 	ImGui::EndFrame();

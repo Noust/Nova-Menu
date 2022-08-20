@@ -74,6 +74,8 @@ public:
 	ImColor TargetColor = { 255,0,0 };
 	int AimbotSleep = 16;
 
+	bool NoRadgoll = false;
+
 	bool CustomValues = false;
 	float SwimSpeed = 1, runSpeed = 1, caracceleration = 1, carGravity = 9.800000191f;
 

@@ -9,6 +9,14 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 			local = (Entitys*)(E.GetLocalPlayer());
 			if (local != 0 && !OnPause()) {
 				if (ShowMenu && UserSettings.MenuWindow != 2) {
+					if (UserSettings.NoRadgoll) {
+						if (local->radgoll != 0)
+							local->radgoll = 0;
+					}
+					else {
+						if (local->radgoll != 32)
+							local->radgoll = 32;
+					}
 					if (UserSettings.Godmode) {
 						if (local->GodMode != true)
 							local->GodMode = true;
