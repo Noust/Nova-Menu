@@ -92,7 +92,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		if (UserSettings.Aimbot && !OnPause()) {
 			Closest = FindClosestEnemy();
 		}
@@ -109,7 +109,7 @@ Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
 
 
 DWORD WINAPI Aimbot(HMODULE hMod) {
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		if (UserSettings.Aimbot && hooked && !OnPause() && !ShowMenu) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
 				int64_t EntityAddr = E.GetEntity(Closest);
@@ -906,6 +906,35 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				}
 			}
 		}
+		if (UserSettings.TpWindowMenu == 2) {
+			Vector3 pos3 = local->pos;
+			Vector3 pos4 = local->pos;
+			Vector3 pos5 = local->pos;
+			Vector3 pos6 = local->pos;
+			Vector3 pos7 = local->pos;
+			Vector3 pos8 = local->pos;
+			pos3.x += 0.8f;
+			pos4.x -= 0.8f;
+			pos5.y += 0.8f;
+			pos6.y -= 0.8f;
+			pos7.z += 0.8f;
+			pos8.z -= 0.8f;
+			Vector2 posscreen3 = PosToScreen(pos3);
+			Vector2 posscreen4 = PosToScreen(pos4);
+			Vector2 posscreen5 = PosToScreen(pos5);
+			Vector2 posscreen6 = PosToScreen(pos6);
+			Vector2 posscreen7 = PosToScreen(pos7);
+			Vector2 posscreen8 = PosToScreen(pos8);
+			DrawLine(posscreen3, posscreen4, ImColor(255, 0, 0), 0);
+			DrawLine(posscreen5, posscreen6, ImColor(255, 0, 0), 0);
+			DrawLine(posscreen7, posscreen8, ImColor(255, 0, 0), 0);
+			DrawChar(posscreen3, "+X", ImColor(0, 255, 0), 2);
+			DrawChar(posscreen4, "-X", ImColor(0, 255, 0), 2);
+			DrawChar(posscreen5, "+Z", ImColor(0, 255, 0), 2);
+			DrawChar(posscreen6, "-Z", ImColor(0, 255, 0), 2);
+			DrawChar(posscreen7, "+Y", ImColor(0, 255, 0), 2);
+			DrawChar(posscreen8, "-Y", ImColor(0, 255, 0), 2);
+		}
 		if (UserSettings.ShowMissiles && E.IsOpressor() && local != 0) {
 			Vector3 pos3 = local->CarPtr->pos;
 			Vector2 posscreen3 = PosToScreen(pos3);
@@ -982,7 +1011,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		Sleep(500);
 	}
 	if (HookAddr != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
