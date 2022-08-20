@@ -92,7 +92,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		if (UserSettings.Aimbot) {
 			Closest = FindClosestEnemy();
 		}
@@ -109,12 +109,12 @@ Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
 
 
 DWORD WINAPI Aimbot(HMODULE hMod) {
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		if (UserSettings.Aimbot && hooked && !OnPause() && !ShowMenu) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
 				int64_t EntityAddr = E.GetEntity(Closest);
 				if (EntityAddr != 0) {
-					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x280) != 0) {
+					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x2A0) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
 						if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
 							SetCursorPos(AimbottargetScreen.x, AimbottargetScreen.y);
@@ -356,10 +356,23 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			if (UserSettings.Aimbot) {
 				ImGui::Checkbox("Only Players", &UserSettings.onlyPlayers);
 				if (UserSettings.onlyPlayers) {
+					UserSettings.onlyNPC = false;
 					UserSettings.miniumHealth = 201;
+					UserSettings.MaxHealth = 900;
 				}
-				else {
+				else if (!UserSettings.onlyNPC) {
 					UserSettings.miniumHealth = 11;
+					UserSettings.MaxHealth = 900;
+				}
+				ImGui::Checkbox("Only NPCs", &UserSettings.onlyNPC);
+				if (UserSettings.onlyNPC) {
+					UserSettings.onlyPlayers = false;
+					UserSettings.miniumHealth = 11;
+					UserSettings.MaxHealth = 201;
+				}
+				else if (!UserSettings.onlyPlayers) {
+					UserSettings.miniumHealth = 11;
+					UserSettings.MaxHealth = 900;
 				}
 				ImGui::Text("Target");
 				if (ImGui::Button("Head")) {
@@ -382,14 +395,14 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				}
 				ImGui::Checkbox("Show Aimbot Fov", &UserSettings.ShowFov);
 				if (UserSettings.ShowFov) {
-					ImGui::SliderInt("Thickness Fov", &UserSettings.FovThickness, 1, 10);
+					ImGui::SliderInt("Thickness Fov", &UserSettings.FovThickness, 0, 10);
 					ImGui::ColorEdit4("Fov Color", (float*)(&UserSettings.FovColor));
 				}
 				ImGui::SliderInt("Aimbot Fov", &UserSettings.AimbotFov, 1, 1920);
 				ImGui::Checkbox("Show Target", &UserSettings.ShowTarget);
 				if (UserSettings.ShowTarget)
 				{
-					ImGui::SliderInt("Thickness target line", &UserSettings.TargetThickness, 1, 10);
+					ImGui::SliderInt("Thickness target line", &UserSettings.TargetThickness, 0, 10);
 					ImGui::ColorEdit4("Target color", (float*)(&UserSettings.TargetColor));
 				}
 				ImGui::SliderInt("Aimbot Sleep", &UserSettings.AimbotSleep, 1, 25);
@@ -908,7 +921,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			if (UserSettings.ShowTarget) {
 				int64_t EntityAddr = E.GetEntity(FindClosestEnemy());
 				if (EntityAddr != 0) {
-					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x280) != 0) {
+					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x2A0) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
 						if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
 							DrawLine({ 1920 / 2, 1080 / 2 }, AimbottargetScreen, UserSettings.TargetColor, UserSettings.TargetThickness);
@@ -969,7 +982,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
 	if (HookAddr != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
