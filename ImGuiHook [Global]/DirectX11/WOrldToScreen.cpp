@@ -34,12 +34,12 @@ Vector2 PosToScreen(Vector3 pos) {
 }
 
 bool OnPause() {
-	int8_t OnPauseB = *(int8_t*)((DWORD64)GetModuleHandleA("GTA5.exe") + 0x20D6107);
+	int8_t OnPauseB = *(int8_t*)(OnPauseAddr);
 	if (OnPauseB != 0)
 		return true;
 	return false;
 }
 
 void SetMouseMode(int8_t MouseMode) {
-	*(int8_t*)((DWORD64)GetModuleHandleA("GTA5.exe") + 0x2DA5FE0) = MouseMode;
+	*(int8_t*)(MouseModeAddr) = MouseMode;
 }

@@ -93,7 +93,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 		}
 	}
 	while (!GetAsyncKeyState(VK_DELETE)) {
-		if (UserSettings.Aimbot) {
+		if (UserSettings.Aimbot && !OnPause()) {
 			Closest = FindClosestEnemy();
 		}
 		Sleep(1);
@@ -1006,6 +1006,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved) {
 		DisableThreadLibraryCalls(hModule);
 		if (ChecktDirectXVersion(DirectXVersion.D3D11) == true) {
 			Process::Module = hModule;
+			GetAddresses();
 			StartFunc(hModule, (LPTHREAD_START_ROUTINE)MainThread);
 			StartFunc(hModule, (LPTHREAD_START_ROUTINE)InitiateHooks);
 			StartFunc(hModule, (LPTHREAD_START_ROUTINE)SetValues);

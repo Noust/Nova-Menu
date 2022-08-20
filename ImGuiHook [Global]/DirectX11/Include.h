@@ -12,6 +12,10 @@
 #include "../Directories/ImGui/imgui_impl_win32.h"
 #include "Vector.h"
 bool ShowMenu = false;
+DWORD64 EntityList;
+DWORD64 MaxEntitiesAddr;
+DWORD64 OnPauseAddr;
+DWORD64 MouseModeAddr;
 
 #include "Hooks.h"
 #include "settings.h"
