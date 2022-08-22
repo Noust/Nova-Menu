@@ -194,6 +194,8 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::Begin("Nova", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
 		ImGui::BeginChild("##Custom", ImVec2(ImGui::GetContentRegionAvail().x, 43), true);
 		if (ImGui::Button("Disable All")) {
+			UserSettings.FilledESP = false;
+			UserSettings.FilledCircle = false;
 			UserSettings.CustomValues = false;
 			UserSettings.NoRadgoll = false;
 			UserSettings.onlyPlayers = false;
@@ -226,6 +228,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Best Configuration")) {
+			UserSettings.FilledESP = true;
 			UserSettings.CustomValues = true;
 			UserSettings.NoRadgoll = true;
 			UserSettings.Godmode = true;
@@ -277,6 +280,13 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::ColorEdit4("Box NPC Color", (float*)(&UserSettings.NPCBoxColor));
 				ImGui::SliderInt("Box thickness", &UserSettings.BoxThickness, 0, 10);
 				ImGui::SliderFloat("Box Width", &UserSettings.BoxWidth, 0, 1);
+				ImGui::Separator();
+			}
+			ImGui::Checkbox("Filled Box ESP", &UserSettings.FilledESP);
+			if (UserSettings.FilledESP) {
+				ImGui::ColorEdit4("Enemies Filled Box Color", (float*)(&UserSettings.NPCFilledColor));
+				ImGui::ColorEdit4("Team Filled Box Color", (float*)(&UserSettings.PlayerFilledColor));
+				ImGui::SliderFloat("Filled Box Width", &UserSettings.FilledWidth, 0, 1);
 				ImGui::Separator();
 			}
 			ImGui::Checkbox("3D Box Esp", &UserSettings.Esp3d);
@@ -399,6 +409,10 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				if (UserSettings.ShowFov) {
 					ImGui::SliderInt("Thickness Fov", &UserSettings.FovThickness, 0, 10);
 					ImGui::ColorEdit4("Fov Color", (float*)(&UserSettings.FovColor));
+					ImGui::Checkbox("Filled Circle", &UserSettings.FilledCircle);
+					if (UserSettings.FilledCircle) {
+						ImGui::ColorEdit4("Filled Circle Color", (float*)(&UserSettings.FilledCircleColor));
+					}
 				}
 				ImGui::SliderInt("Aimbot Fov", &UserSettings.AimbotFov, 1, 1920);
 				ImGui::Checkbox("Show Target", &UserSettings.ShowTarget);
@@ -788,6 +802,17 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 							Vector2 posscreen = PosToScreen(pos);
 							Vector2 posscreen1 = PosToScreen(pos1);
 							Vector2 posscreen2 = PosToScreen(pos2);
+							float heigth = posscreen.y - posscreen1.y;
+							if (UserSettings.FilledESP) {
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									if (maxhealth > 11 && maxhealth < 201) {
+										DrawFilledRect(posscreen, heigth, heigth * UserSettings.BoxWidth, UserSettings.NPCBoxColor);
+									}
+									if (maxhealth > 201 && maxhealth < 999) {
+										DrawFilledRect(posscreen, heigth, heigth * UserSettings.BoxWidth, UserSettings.PlayerBoxColor);
+									}
+								}
+							}
 							if (UserSettings.BoneEsp) {
 								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
 									Vector2 neck = GetBonePos(EntityAddr, _NECK_);
@@ -824,7 +849,6 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 							}
 							if (UserSettings.BoxEsp) {
 								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
-									float heigth = posscreen.y - posscreen1.y;
 									if (maxhealth > 11 && maxhealth < 201) {
 										DrawRect(posscreen, heigth, heigth * UserSettings.BoxWidth, UserSettings.NPCBoxColor, UserSettings.BoxThickness);
 									}
@@ -949,6 +973,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		if (UserSettings.Aimbot) {
 			if (UserSettings.ShowFov) {
 				DrawCircle({ 1920 / 2, 1080 / 2 }, UserSettings.FovColor, UserSettings.AimbotFov, UserSettings.FovThickness);
+			}
+			if (UserSettings.FilledCircle) {
+				ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2(1920 / 2, 1080 / 2), UserSettings.AimbotFov, UserSettings.FilledCircleColor, 0);
 			}
 			if (UserSettings.ShowTarget) {
 				int64_t EntityAddr = E.GetEntity(Closest);

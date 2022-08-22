@@ -45,6 +45,11 @@ public:
 	bool ShowMissiles = false;
 	ImColor MissilesColor = { 255,255,255 };
 
+	bool FilledESP = false;
+	ImColor NPCFilledColor = { 0,0,0,80 };
+	ImColor PlayerFilledColor = { 0,0,0,80 };
+	float FilledWidth = 0.5f;
+
 	bool Godmode = false;
 	bool CarGodMode = false;
 	bool NeverWanted = false;
@@ -72,6 +77,8 @@ public:
 	bool ShowTarget = false;
 	int TargetThickness = 0;
 	ImColor TargetColor = { 255,0,0 };
+	bool FilledCircle = false;
+	ImColor FilledCircleColor = { 0,0,0,80 };
 	int AimbotSleep = 16;
 
 	bool NoRadgoll = false;

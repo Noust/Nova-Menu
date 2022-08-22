@@ -77,3 +77,6 @@ void DrawBox3d(DWORD64 EntityAddr, ImColor color, int thickness) {
 void DrawCircle(Vector2 pos, ImColor color, float radius, int thickness) {
 	ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(pos.x, pos.y), radius, color, 0, thickness);
 }
+void DrawFilledRect(Vector2 pos, float heigth, float Width, ImColor color) {
+	ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(pos.x - Width / 2, pos.y), ImVec2(pos.x + Width / 2, pos.y - heigth), color, 0);
+}
