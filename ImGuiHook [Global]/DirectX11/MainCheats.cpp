@@ -69,17 +69,6 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 							initiate = false;
 						}
 					}
-					if (UserSettings.KillAura) {
-						for (int i = 0; i < E.GetMaxEntities(); i++) {
-							DWORD64 EntityAddr = E.GetEntity(i);
-							if (EntityAddr != 0) {
-								entsK = (Entitys*)(EntityAddr);
-								if (local->pos.Distance(entsK->pos) < UserSettings.KillAuraDist) {
-									entsK->Health = 0;
-								}
-							}
-						}
-					}
 					if (UserSettings.CustomValues) {
 						if (E.Alive()) {
 							local->PlayerInfoPtr->SwimSpeed = UserSettings.SwimSpeed;
@@ -87,6 +76,17 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 							if (E.IsInCar() && local->CarPtr->CarCustom != 0) {
 								local->CarPtr->CarCustom->ACCELERATION = UserSettings.caracceleration;
 								local->CarPtr->GravityCar = UserSettings.carGravity;
+							}
+						}
+					}
+				}
+				if (UserSettings.KillAura) {
+					for (int i = 0; i < E.GetMaxEntities(); i++) {
+						DWORD64 EntityAddr = E.GetEntity(i);
+						if (EntityAddr != 0) {
+							entsK = (Entitys*)(EntityAddr);
+							if (local->pos.Distance(entsK->pos) < UserSettings.KillAuraDist) {
+								entsK->Health = 0;
 							}
 						}
 					}

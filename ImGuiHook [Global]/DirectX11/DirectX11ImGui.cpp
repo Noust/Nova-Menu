@@ -679,6 +679,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				if (ImGui::Button("Bunker")) {
 					E.SetPos({ -736.9771118f,5953.104492f,18.09233284f });
 				}
+				if (ImGui::Button("Mask Shop")) {
+					E.SetPos({ -1338.342f, -1278.912f, 4.865f });
+				}
 			}
 			if (UserSettings.TpWindowMenu == 1) {
 				if (ImGui::Button("Ammunation Gun Range")) {
@@ -749,9 +752,6 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				}
 				if (ImGui::Button("Trevors Office")) {
 					E.SetPos({ 97.27069855f, -1290.994019f, 29.26879883f });
-				}
-				if (ImGui::Button("Mask Shop")) {
-					E.SetPos({ -1338.342f, -1278.912f, 4.865f });
 				}
 			}
 			if (UserSettings.TpWindowMenu == 2) {
