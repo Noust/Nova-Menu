@@ -192,79 +192,23 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	ImGui::GetIO().MouseDrawCursor = ShowMenu;
 	if (ShowMenu == true) {
 		ImGui::Begin("Nova", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
-		ImGui::BeginChild("##Custom", ImVec2(ImGui::GetContentRegionAvail().x, 43), true);
-		if (ImGui::Button("Disable All")) {
-			UserSettings.FilledESP = false;
-			UserSettings.FilledCircle = false;
-			UserSettings.CustomValues = false;
-			UserSettings.NoRadgoll = false;
-			UserSettings.onlyPlayers = false;
-			UserSettings.Godmode = false;
-			UserSettings.CarGodMode = false;
-			UserSettings.NeverWanted = false;
-			UserSettings.InfAmmo = false;
-			UserSettings.nocarcollision = false;
-			UserSettings.KillAura = false;
-			UserSettings.Name = false;
-			UserSettings.Distance = false;
-			UserSettings.HP = false;
-			UserSettings.Type = false;
-			UserSettings.SnapLine = false;
-			UserSettings.Esp3d = false;
-			UserSettings.BoxEsp = false;
-			UserSettings.BoneEsp = false;
-			UserSettings.InfiniteMissiles = false;
-			UserSettings.ShowMissiles = false;
-			UserSettings.Aimbot = false;
-			UserSettings.ShowFov = false;
-			UserSettings.ShowTarget = false;
-			UserSettings.runSpeed = 1;
-			UserSettings.SwimSpeed = 1;
-			UserSettings.caracceleration = 1;
-			if (E.IsOpressor())
-				UserSettings.carGravity = 11.800000191f;
-			else
-				UserSettings.carGravity = 9.800000191f;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Best Configuration")) {
-			UserSettings.FilledESP = true;
-			UserSettings.CustomValues = true;
-			UserSettings.NoRadgoll = true;
-			UserSettings.Godmode = true;
-			UserSettings.CarGodMode = true;
-			UserSettings.NeverWanted = true;
-			UserSettings.InfAmmo = true;
-			UserSettings.nocarcollision = true;
-			UserSettings.Name = true;
-			UserSettings.Distance = true;
-			UserSettings.HP = true;
-			UserSettings.Type = true;
-			UserSettings.BoneEsp = true;
-			if (!E.IsOpressor()) {
-				UserSettings.InfiniteMissiles = false;
-				UserSettings.ShowMissiles = false;
-				UserSettings.carGravity = 79.0f;
-			}
-			else {
-				UserSettings.InfiniteMissiles = true;
-				UserSettings.ShowMissiles = true;
-				UserSettings.carGravity = 9.800000191f;
-			}
-		}
-		ImGui::EndChild();
-		ImGui::BeginChild("##leftside", ImVec2(200, ImGui::GetContentRegionAvail().y), true);
-		if (ImGui::Button("Visuals", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+		ImGui::BeginChild("##leftside", ImVec2(ImGui::GetContentRegionAvail().x, 49), true);
+		if (ImGui::Button("Visuals", ImVec2(ImGui::GetWindowSize().x / 4.26f, 25))) {
 			UserSettings.MenuWindow = 0;
 		}
-		if (ImGui::Button("Player", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+		ImGui::SameLine();
+		if (ImGui::Button("Player", ImVec2(ImGui::GetWindowSize().x / 4.26f, 25))) {
 			UserSettings.MenuWindow = 1;
 		}
-		if (ImGui::Button("Teleport", ImVec2(ImGui::GetContentRegionAvail().x, 25))) {
+		ImGui::SameLine();
+		if (ImGui::Button("Teleport", ImVec2(ImGui::GetWindowSize().x / 4.26f, 25))) {
 			UserSettings.MenuWindow = 2;
 		}
-		ImGui::EndChild();
 		ImGui::SameLine();
+		if (ImGui::Button("Options", ImVec2(ImGui::GetWindowSize().x / 4.26f, 25))) {
+			UserSettings.MenuWindow = 3;
+		}
+		ImGui::EndChild();
 		ImGui::BeginChild("##rigthside", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), true);
 		if (UserSettings.MenuWindow == 0) {
 			ImGui::Checkbox("Bone Esp",&UserSettings.BoneEsp);
@@ -780,6 +724,66 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::Text(ZC);
 			}
 			ImGui::EndChild();
+		}
+		if (UserSettings.MenuWindow == 3) {
+			if (ImGui::Button("Disable All")) {
+				UserSettings.FilledESP = false;
+				UserSettings.FilledCircle = false;
+				UserSettings.CustomValues = false;
+				UserSettings.NoRadgoll = false;
+				UserSettings.onlyPlayers = false;
+				UserSettings.Godmode = false;
+				UserSettings.CarGodMode = false;
+				UserSettings.NeverWanted = false;
+				UserSettings.InfAmmo = false;
+				UserSettings.nocarcollision = false;
+				UserSettings.KillAura = false;
+				UserSettings.Name = false;
+				UserSettings.Distance = false;
+				UserSettings.HP = false;
+				UserSettings.Type = false;
+				UserSettings.SnapLine = false;
+				UserSettings.Esp3d = false;
+				UserSettings.BoxEsp = false;
+				UserSettings.BoneEsp = false;
+				UserSettings.InfiniteMissiles = false;
+				UserSettings.ShowMissiles = false;
+				UserSettings.Aimbot = false;
+				UserSettings.ShowFov = false;
+				UserSettings.ShowTarget = false;
+				UserSettings.runSpeed = 1;
+				UserSettings.SwimSpeed = 1;
+				UserSettings.caracceleration = 1;
+				if (E.IsOpressor())
+					UserSettings.carGravity = 11.800000191f;
+				else
+					UserSettings.carGravity = 9.800000191f;
+			}
+			if (ImGui::Button("Best Configuration")) {
+				UserSettings.FilledESP = true;
+				UserSettings.CustomValues = true;
+				UserSettings.NoRadgoll = true;
+				UserSettings.Godmode = true;
+				UserSettings.CarGodMode = true;
+				UserSettings.NeverWanted = true;
+				UserSettings.InfAmmo = true;
+				UserSettings.nocarcollision = true;
+				UserSettings.Name = true;
+				UserSettings.Distance = true;
+				UserSettings.HP = true;
+				UserSettings.Type = true;
+				UserSettings.BoneEsp = true;
+				if (!E.IsOpressor()) {
+					UserSettings.InfiniteMissiles = false;
+					UserSettings.ShowMissiles = false;
+					UserSettings.carGravity = 79.0f;
+				}
+				else {
+					UserSettings.InfiniteMissiles = true;
+					UserSettings.ShowMissiles = true;
+					UserSettings.carGravity = 9.800000191f;
+				}
+			}
 		}
 		ImGui::EndChild();
 		ImGui::End();
