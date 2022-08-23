@@ -750,6 +750,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				if (ImGui::Button("Trevors Office")) {
 					E.SetPos({ 97.27069855f, -1290.994019f, 29.26879883f });
 				}
+				if (ImGui::Button("Mask Shop")) {
+					E.SetPos({ -1338.342f, -1278.912f, 4.865f });
+				}
 			}
 			if (UserSettings.TpWindowMenu == 2) {
 				sprintf_s(CurrentPointPos, 50, "Current Point Pos: X:%f", UserSettings.PointPos.x);
