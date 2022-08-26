@@ -114,7 +114,7 @@ DWORD WINAPI Aimbot(HMODULE hMod) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
 				int64_t EntityAddr = E.GetEntity(Closest);
 				if (EntityAddr != 0) {
-					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x2A0) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0) {
+					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x2A0) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0 && local->pos.Distance(*(Vector3*)(EntityAddr + 0x90)) < UserSettings.ESPDistance) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
 						if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
 							SetCursorPos(AimbottargetScreen.x, AimbottargetScreen.y);
@@ -357,9 +357,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					if (UserSettings.FilledCircle) {
 						ImGui::ColorEdit4("Filled Circle Color", (float*)(&UserSettings.FilledCircleColor));
 					}
-					ImGui::Separator();
 				}
 				ImGui::SliderInt("Aimbot Fov", &UserSettings.AimbotFov, 1, 1920);
+				ImGui::Separator();
 				ImGui::Checkbox("Show Target", &UserSettings.ShowTarget);
 				if (UserSettings.ShowTarget)
 				{
@@ -988,7 +988,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			if (UserSettings.ShowTarget) {
 				int64_t EntityAddr = E.GetEntity(Closest);
 				if (EntityAddr != 0) {
-					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x2A0) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0) {
+					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x2A0) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0 && local->pos.Distance(*(Vector3*)(EntityAddr + 0x90)) < UserSettings.ESPDistance) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
 						if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
 							DrawLine({ 1920 / 2, 1080 / 2 }, AimbottargetScreen, UserSettings.TargetColor, UserSettings.TargetThickness);
