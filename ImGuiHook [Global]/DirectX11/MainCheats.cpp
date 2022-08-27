@@ -10,11 +10,11 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 			if (local != 0 && !OnPause()) {
 				if (ShowMenu && UserSettings.MenuWindow != 2) {
 					if (UserSettings.NoRadgoll) {
-						if (local->radgoll != 0)
-							local->radgoll = 0;
+						if (local->radgoll != 1)
+							local->radgoll = 1;
 					}
 					else {
-						if (local->radgoll != 32)
+						if (local->radgoll == 1)
 							local->radgoll = 32;
 					}
 					if (UserSettings.Godmode) {
@@ -22,7 +22,7 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 							local->GodMode = true;
 					}
 					else {
-						if (local->GodMode != false)
+						if (local->GodMode == true)
 							local->GodMode = false;
 					}
 					if (UserSettings.CarGodMode) {
@@ -33,7 +33,7 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 					}
 					else {
 						if (E.IsInCar()) {
-							if (local->CarPtr->GodMode != false)
+							if (local->CarPtr->GodMode == true)
 								local->CarPtr->GodMode = false;
 						}
 					}
@@ -48,7 +48,7 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 					else {
 						if (E.IsInCar()) {
 							if (local->CarPtr->CarCustom != 0) {
-								if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER != 1)
+								if (local->CarPtr->CarCustom->DEFORM_MULTIPLIER == 0)
 									local->CarPtr->CarCustom->DEFORM_MULTIPLIER = 1;
 							}
 						}
