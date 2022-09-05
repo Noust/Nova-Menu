@@ -1006,9 +1006,9 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			if (local->radgoll == 1)
 				local->radgoll = 32;
 		}
-		if (OnPause())
-			ShowMenu = false;
 	}
+	if (OnPause())
+		ShowMenu = false;
 	ImGui::EndFrame();
 	ImGui::Render();
 	DirectX11Interface::DeviceContext->OMSetRenderTargets(1, &DirectX11Interface::RenderTargetView, NULL);
