@@ -997,16 +997,17 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				}
 			}
 		}
-		if (ShowMenu) {
+		if (ShowMenu)
 			SetMouseMode(0);
-		}
-		else {
+		else
 			SetMouseMode(2);
-		}
+
 		if (UserSettings.MenuWindow == 2) {
 			if (local->radgoll == 1)
 				local->radgoll = 32;
 		}
+		if (OnPause())
+			ShowMenu = false;
 	}
 	ImGui::EndFrame();
 	ImGui::Render();
