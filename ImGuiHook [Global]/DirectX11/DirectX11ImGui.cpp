@@ -969,6 +969,28 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			DrawChar(posscreen6, "-Z", ImColor(0, 255, 0), 2);
 			DrawChar(posscreen7, "+Y", ImColor(0, 255, 0), 2);
 			DrawChar(posscreen8, "-Y", ImColor(0, 255, 0), 2);
+			Vector3 poss3 = UserSettings.XYZCustom;
+			Vector3 poss4 = UserSettings.XYZCustom;
+			Vector3 poss5 = UserSettings.XYZCustom;
+			Vector3 poss6 = UserSettings.XYZCustom;
+			Vector3 poss7 = UserSettings.XYZCustom;
+			Vector3 poss8 = UserSettings.XYZCustom;
+			poss3.x += 0.2f;
+			poss4.x -= 0.2f;
+			poss5.y += 0.2f;
+			poss6.y -= 0.2f;
+			poss7.z += 0.2f;
+			poss8.z -= 0.2f;
+			Vector2 possscreen3 = PosToScreen(poss3);
+			Vector2 possscreen4 = PosToScreen(poss4);
+			Vector2 possscreen5 = PosToScreen(poss5);
+			Vector2 possscreen6 = PosToScreen(poss6);
+			Vector2 possscreen7 = PosToScreen(poss7);
+			Vector2 possscreen8 = PosToScreen(poss8);
+			DrawLine(possscreen3, possscreen4, ImColor(255, 0, 0), 0);
+			DrawLine(possscreen5, possscreen6, ImColor(255, 0, 0), 0);
+			DrawLine(possscreen7, possscreen8, ImColor(255, 0, 0), 0);
+			DrawChar(possscreen7, "TP Point", ImColor(0, 255, 0), 1);
 		}
 		if (UserSettings.ShowMissiles && E.IsOpressor() && local != 0) {
 			Vector3 pos3 = local->CarPtr->pos;
@@ -1009,6 +1031,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 	}
 	if (OnPause())
 		ShowMenu = false;
+
 	ImGui::EndFrame();
 	ImGui::Render();
 	DirectX11Interface::DeviceContext->OMSetRenderTargets(1, &DirectX11Interface::RenderTargetView, NULL);
