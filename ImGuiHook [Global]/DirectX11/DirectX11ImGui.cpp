@@ -39,12 +39,9 @@ void Colors() {
 	style.WindowMinSize = ImVec2(783, 508);
 	style.WindowTitleAlign = { 0.5,0.5f };
 }
-//Address of signature = GTA5.exe + 0x007904F0
-//"\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8", "xxx????xx????x"
-//"41 81 E8 ? ? ? ? 0F 84 ? ? ? ? B8"
-//Address of signature = GTA5.exe + 0x01391F2F
-//"\x89\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8B\x05\x00\x00\x00\x00\xBB", "xx????x????xx????x"
-//"89 0D ? ? ? ? E8 ? ? ? ? 8B 05 ? ? ? ? BB"
+//"GTA5.exe" + 26623D8
+//"48 8B ? ? ? ? ? 4A 8B ? ? 48 8B ? E8 ? ? ? ? 45 33"
+//F3 0F ?? ?? ?? 0F 28 ?? 0F 28 ?? ?? 0F 28 ?? ?? F3 0F
 
 int FindClosestEnemy() {
 	int ClosestEntity = 0;
@@ -73,26 +70,16 @@ int FindClosestEnemy() {
 DWORD WINAPI InitiateHooks(HMODULE hMod) {
 	while (!hooked) {
 		char modulename[] = "GTA5.exe";
-		char sig[] = "\xF3\x0F\x00\x00\x00\x0F\x28\x00\x0F\x28\x00\x00\x0F\x28\x00\x00\xF3\x0F";
-		char mask[] = "xx???xx?xx??xx??xx";
 		char sig1[] = "\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8";
 		char mask1[] = "xxx????xx????x";
-		char sig2[] = "\x66\x45\x00\x00\x00\x74\x00\x41\x0F\x00\x00\x00\x49\x8B";
-		char mask2[] = "xx???x?xx???xx";
-		char sig3[] = "\x89\x5F\x00\x48\x8B\x00\x00\x00\x48\x8B\x00\x00\x00\x48\x8B\x00\x00\x00\x48\x83\xC4\x00\x5F\xC3\xCC\x2D";
-		char mask3[] = "xx?xx???xx???xx???xxx?xxxx";
-		HookAddr = FindPattern(modulename, sig, mask);
 		BoneFunc = FindPattern(modulename, sig1, mask1);
-		PatchAddr = FindPattern(modulename, sig2, mask2);
-		PatchAddr1 = FindPattern(modulename, sig3, mask3);
-		int HookLength = 16;
-		jmpback = HookAddr + HookLength;
-		if (HookAddr != NULL && BoneFunc != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
-			Hook((BYTE*)HookAddr, (BYTE*)GetView, HookLength);
+		PatchAddr = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x1028DEE;
+		PatchAddr1 = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x1022449;
+		if (BoneFunc != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		if (UserSettings.Aimbot && !OnPause()) {
 			Closest = FindClosestEnemy();
 		}
@@ -109,7 +96,7 @@ Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
 
 
 DWORD WINAPI Aimbot(HMODULE hMod) {
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		if (UserSettings.Aimbot && hooked && !OnPause() && !ShowMenu) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
 				int64_t EntityAddr = E.GetEntity(Closest);
@@ -789,7 +776,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::End();
 	}
 	if (hooked && !OnPause()) {
-		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name) {
+		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name || UserSettings.FilledESP) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				int64_t EntityAddr = E.GetEntity(i);
 				ents = (Entitys*)(EntityAddr);
@@ -1077,11 +1064,10 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
-	if (HookAddr != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
-		Patch((BYTE*)HookAddr, (BYTE*)"\xF3\x0F\x11\x45\x00\x0F\x28\x20\x0F\x28\x68\x10\x0F\x28\x70\x20", 16);
+	if (PatchAddr != NULL && PatchAddr1 != NULL) {
 		Patch((BYTE*)PatchAddr, (BYTE*)"\x66\x45\x89\x53\x56", 5);
 		Patch((BYTE*)PatchAddr1, (BYTE*)"\x89\x5F\x20", 3);
 	}

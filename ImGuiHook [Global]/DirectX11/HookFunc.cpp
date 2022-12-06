@@ -67,8 +67,8 @@ DWORD64 FindPattern(char* module, char* pattern, char* mask)
 	return NULL;
 }
 void GetAddresses() {
-	EntityList = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x266DBC8;
+	EntityList = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x26623D8;
 	MaxEntitiesAddr = EntityList + (1 << 3);
-	OnPauseAddr = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x20D6107;
-	MouseModeAddr = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x2DA5FE0;
+	OnPauseAddr = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x20C9490;
+	MouseModeAddr = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x2D89120;
 }

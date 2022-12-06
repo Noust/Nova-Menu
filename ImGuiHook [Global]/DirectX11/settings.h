@@ -3,7 +3,7 @@
 class settings {
 public:
 	int MenuWindow;
-	
+
 	bool BoneEsp = false;
 	int BoneThickness = 0;
 	ImColor PlayerBoneColor = { 0,0,255 };

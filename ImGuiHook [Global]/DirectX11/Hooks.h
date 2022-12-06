@@ -1,10 +1,7 @@
 #pragma once
 bool hooked = false;
-DWORD64 HookAddr;
 DWORD64 PatchAddr;
 DWORD64 PatchAddr1;
-DWORD64 ViewAddr;
-DWORD64 jmpback;
 
 class Entitys
 {
@@ -22,24 +19,22 @@ public:
 	int8_t hostility; //0x018C
 	char pad_018D[243]; //0x018D
 	float Health; //0x0280
-	char pad_0284[28]; //0x0284
-	float MaxHealth; //0x02A0
-	char pad_02A4[124]; //0x02A4
+	float MaxHealth; //0x0284
+	char pad_0288[152]; //0x0288
 	Vector3 Velocity; //0x0320
-	char pad_032C[2564]; //0x032C
-	class Car* CarPtr; //0x0D30
-	char pad_0D38[896]; //0x0D38
-	int8_t radgoll; //0x10B8
-	char pad_10B9[15]; //0x10B9
-	class PlayerInfo* PlayerInfoPtr; //0x10C8
-	char pad_10D0[8]; //0x10D0
-	class WeaponManager* Weapon; //0x10D8
-	char pad_10E0[907]; //0x10E0
-	int8_t IsInCar; //0x146B
-	char pad_146C[196]; //0x146C
-	float Armor; //0x1530
-	char pad_1534[2904]; //0x1534
-}; //Size: 0x208C
+	char pad_032C[2724]; //0x032C
+	class Car* CarPtr; //0x0DD0
+	char pad_0DD8[704]; //0x0DD8
+	int8_t radgoll; //0x1098
+	char pad_1099[15]; //0x1099
+	class PlayerInfo* PlayerInfoPtr; //0x10A8
+	char pad_10B0[8]; //0x10B0
+	class WeaponManager* Weapon; //0x10B8
+	char pad_10C0[907]; //0x10C0
+	int8_t IsInCar; //0x144B
+	char pad_144C[119]; //0x144C
+}; //Size: 0x14C3
+
 
 class Posclass
 {
@@ -167,14 +162,3 @@ Entitys* local;
 Entitys* ents3;
 Entitys* entsK;
 Entitys* entsA;
-
-__declspec(naked) void GetView() {
-	__asm{
-		mov[ViewAddr], rax
-		movss[rbp + 0x00], xmm0
-		movaps xmm4, [rax]
-		movaps xmm5, [rax + 0x10]
-		movaps xmm6, [rax + 0x20]
-		jmp[jmpback]
-	}
-}

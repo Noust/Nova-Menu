@@ -19,13 +19,16 @@ bool WorldToScreen(Vector4 pos, float matrix[16], Vector2& posscreen) {
 	posscreen.y = -(1080 / 2 * N.y) + (N.y + 1080 / 2);
 	return true;
 }
+//Address of signature = GTA5.exe + 0x005A89B7
+//"\x0F\x28\x00\x0F\x28\x00\x00\x0F\x28\x00\x00\xF3\x0F\x00\x00\x00\x00\x00\x00\xF3\x44", "xx?xx??xx??xx??????xx"
+//"0F 28 ? 0F 28 ? ? 0F 28 ? ? F3 0F ? ? ? ? ? ? F3 44"
 
 Vector2 PosToScreen(Vector3 pos) {
 	float Matrix[16];
 	Vector2 posscreen;
 	Vector4 poss = { pos.x,pos.y,pos.z,0 };
-	if (hooked && ViewAddr != NULL) {
-		memcpy(&Matrix, (PBYTE*)ViewAddr, sizeof(Matrix));
+	if (hooked) {
+		memcpy(&Matrix, (PBYTE*)0x7FF65D1DFC20, sizeof(Matrix));
 		if (WorldToScreen(poss, Matrix, posscreen)) {
 			return posscreen;
 		}
