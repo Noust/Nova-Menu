@@ -22,9 +22,9 @@ public:
 	float MaxHealth; //0x0284
 	char pad_0288[152]; //0x0288
 	Vector3 Velocity; //0x0320
-	char pad_032C[2756]; //0x032C
-	class Car* CarPtr; //0x0DF0
-	char pad_0DD8[672]; //0x0DF8
+	char pad_032C[2532]; //0x032C
+	class Car* CarPtr; //0x0D10
+	char pad_0DD8[896]; //0x0D18
 	int8_t radgoll; //0x1098
 	char pad_1099[15]; //0x1099
 	class PlayerInfo* PlayerInfoPtr; //0x10A8
