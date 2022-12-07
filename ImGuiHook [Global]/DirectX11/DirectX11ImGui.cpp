@@ -79,7 +79,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		if (UserSettings.Aimbot && !OnPause()) {
 			Closest = FindClosestEnemy();
 		}
@@ -96,12 +96,12 @@ Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
 
 
 DWORD WINAPI Aimbot(HMODULE hMod) {
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		if (UserSettings.Aimbot && hooked && !OnPause() && !ShowMenu) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
 				int64_t EntityAddr = E.GetEntity(Closest);
 				if (EntityAddr != 0) {
-					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x2A0) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0 && local->pos.Distance(*(Vector3*)(EntityAddr + 0x90)) < UserSettings.ESPDistance) {
+					if (*(float*)(EntityAddr + 0x284) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x284) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0 && local->pos.Distance(*(Vector3*)(EntityAddr + 0x90)) < UserSettings.ESPDistance) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
 						if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
 							SetCursorPos(AimbottargetScreen.x, AimbottargetScreen.y);
@@ -997,7 +997,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			if (UserSettings.ShowTarget) {
 				int64_t EntityAddr = E.GetEntity(Closest);
 				if (EntityAddr != 0) {
-					if (*(float*)(EntityAddr + 0x2A0) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x2A0) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0 && local->pos.Distance(*(Vector3*)(EntityAddr + 0x90)) < UserSettings.ESPDistance) {
+					if (*(float*)(EntityAddr + 0x284) > UserSettings.miniumHealth && *(float*)(EntityAddr + 0x284) < UserSettings.MaxHealth && *(float*)(EntityAddr + 0x280) != 0 && local->pos.Distance(*(Vector3*)(EntityAddr + 0x90)) < UserSettings.ESPDistance) {
 						Vector2 AimbottargetScreen = GetBonePos(EntityAddr, UserSettings.AimbotTarget);
 						if (AimbottargetScreen.Distance({ 1920 / 2, 1080 / 2 }) < UserSettings.AimbotFov) {
 							DrawLine({ 1920 / 2, 1080 / 2 }, AimbottargetScreen, UserSettings.TargetColor, UserSettings.TargetThickness);
@@ -1064,7 +1064,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!GetAsyncKeyState(VK_NUMPAD1)) {
 		Sleep(500);
 	}
 	if (PatchAddr != NULL && PatchAddr1 != NULL) {

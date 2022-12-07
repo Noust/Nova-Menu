@@ -22,9 +22,9 @@ public:
 	float MaxHealth; //0x0284
 	char pad_0288[152]; //0x0288
 	Vector3 Velocity; //0x0320
-	char pad_032C[2724]; //0x032C
-	class Car* CarPtr; //0x0DD0
-	char pad_0DD8[704]; //0x0DD8
+	char pad_032C[2756]; //0x032C
+	class Car* CarPtr; //0x0DF0
+	char pad_0DD8[672]; //0x0DF8
 	int8_t radgoll; //0x1098
 	char pad_1099[15]; //0x1099
 	class PlayerInfo* PlayerInfoPtr; //0x10A8
@@ -53,13 +53,13 @@ public:
 	Vector3 pos; //0x0090
 	char pad_009C[237]; //0x009C
 	bool GodMode; //0x0189
-	char pad_018A[1918]; //0x018A
-	float Health; //0x0908
+	char pad_018A[1886]; //0x018A
+	float Health; //0x08E8
 	char pad_090C[44]; //0x090C
-	class CustomCar* CarCustom; //0x0938
+	class CustomCar* CarCustom; //0x0918
 	char pad_0940[796]; //0x0940
-	float GravityCar; //0x0C5C
-	char pad_0C60[1604]; //0x0C60
+	float GravityCar; //0x0C3C
+	char pad_0C60[1636]; //0x0C60
 	int32_t OpressorMisiles; //0x12A4
 	char pad_12A8[76]; //0x12A8
 
