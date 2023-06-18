@@ -28,7 +28,7 @@ Vector2 PosToScreen(Vector3 pos) {
 	Vector2 posscreen;
 	Vector4 poss = { pos.x,pos.y,pos.z,0 };
 	if (hooked) {
-		memcpy(&Matrix, (PBYTE*)0x7FF65D1DFC20, sizeof(Matrix));
+		memcpy(&Matrix, (PBYTE*)((DWORD64)GetModuleHandleA("GTA5.exe") + 0x20CFC20), sizeof(Matrix));
 		if (WorldToScreen(poss, Matrix, posscreen)) {
 			return posscreen;
 		}

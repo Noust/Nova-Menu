@@ -11,4 +11,5 @@ public:
 	bool IsInCar();
 	void SetPos(Vector3 pos);
 	bool IsOpressor();
+	bool HaveMissiles();
 };

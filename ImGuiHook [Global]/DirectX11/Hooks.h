@@ -59,7 +59,8 @@ public:
 	class CustomCar* CarCustom; //0x0918
 	char pad_0940[796]; //0x0940
 	float GravityCar; //0x0C3C
-	char pad_0C60[1604]; //0x0C60
+	char pad_0C60[1600]; //0x0C60
+	int32_t Misiles; //0x1280
 	int32_t OpressorMisiles; //0x1284
 	char pad_12A8[76]; //0x12A8
 

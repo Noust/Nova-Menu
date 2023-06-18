@@ -43,3 +43,10 @@ bool Entity::IsOpressor() {
 	}
 	return false;
 }
+bool Entity::HaveMissiles() {
+	if (IsInCar()) {
+		if (local->CarPtr->Misiles != -1)
+			return true;
+	}
+	return false;
+}

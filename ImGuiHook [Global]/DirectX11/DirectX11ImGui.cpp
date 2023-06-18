@@ -286,7 +286,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::ColorEdit4("Name Player Color", (float*)(&UserSettings.PlayerNameColor));
 				ImGui::Separator();
 			}
-			ImGui::Checkbox("Show Opressor Missiles", &UserSettings.ShowMissiles);
+			ImGui::Checkbox("Show Missiles", &UserSettings.ShowMissiles);
 			if (UserSettings.ShowMissiles) {
 				ImGui::ColorEdit4("Missiles Color", (float*)(&UserSettings.MissilesColor));
 				ImGui::Separator();
@@ -362,7 +362,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			ImGui::Checkbox("Never Wanted", &UserSettings.NeverWanted);
 			ImGui::Checkbox("Infinite Ammo", &UserSettings.InfAmmo);
 			ImGui::Checkbox("No Car Collision", &UserSettings.nocarcollision);
-			ImGui::Checkbox("Oppressor Infinite Missiles", &UserSettings.InfiniteMissiles);
+			ImGui::Checkbox("Infinite Missiles", &UserSettings.InfiniteMissiles);
 			ImGui::Checkbox("Kill Aura", &UserSettings.KillAura);
 			if (UserSettings.KillAura) {
 				ImGui::SliderFloat("Kill Aura Dist", &UserSettings.KillAuraDist, 1, 300);
@@ -770,6 +770,16 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					UserSettings.ShowMissiles = true;
 					UserSettings.carGravity = 9.800000191f;
 				}
+				if (!E.HaveMissiles()) {
+					UserSettings.InfiniteMissiles = false;
+					UserSettings.ShowMissiles = false;
+					UserSettings.carGravity = 79.0f;
+				}
+				else {
+					UserSettings.InfiniteMissiles = true;
+					UserSettings.ShowMissiles = true;
+					UserSettings.carGravity = 9.800000191f;
+				}
 			}
 		}
 		ImGui::EndChild();
@@ -979,12 +989,20 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			DrawLine(possscreen7, possscreen8, ImColor(255, 0, 0), 0);
 			DrawChar(possscreen7, "TP Point", ImColor(0, 255, 0), 1);
 		}
-		if (UserSettings.ShowMissiles && E.IsOpressor() && local != 0) {
-			Vector3 pos3 = local->CarPtr->pos;
-			Vector2 posscreen3 = PosToScreen(pos3);
-			if (posscreen3.x > 0 && posscreen3.y > 0 && posscreen3.x < 1920 && posscreen3.y < 1080) {
-				sprintf_s(OMissiles, 50, "Missiles:%d", local->CarPtr->OpressorMisiles);
-				DrawChar(posscreen3, OMissiles, UserSettings.MissilesColor, 2);
+		if (UserSettings.ShowMissiles && local != 0) {
+			if (E.IsOpressor() || E.HaveMissiles()) {
+				Vector3 pos3 = local->CarPtr->pos;
+				Vector2 posscreen3 = PosToScreen(pos3);
+				if (posscreen3.x > 0 && posscreen3.y > 0 && posscreen3.x < 1920 && posscreen3.y < 1080) {
+					if (E.IsOpressor()) {
+						sprintf_s(OMissiles, 50, "Missiles:%d", local->CarPtr->OpressorMisiles);
+						DrawChar(posscreen3, OMissiles, UserSettings.MissilesColor, 2);
+					}
+					if (E.HaveMissiles()) {
+						sprintf_s(OMissiles, 50, "Missiles:%d", local->CarPtr->Misiles);
+						DrawChar(posscreen3, OMissiles, UserSettings.MissilesColor, 2);
+					}
+				}
 			}
 		}
 		if (UserSettings.Aimbot) {

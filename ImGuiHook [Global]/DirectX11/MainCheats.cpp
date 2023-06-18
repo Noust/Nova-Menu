@@ -95,9 +95,17 @@ DWORD WINAPI SetValues(HMODULE hMod) {
 					if (local->PlayerInfoPtr->WantedLevel != 0)
 						local->PlayerInfoPtr->WantedLevel = 0;
 				}
-				if (UserSettings.InfiniteMissiles && !ShowMenu && E.IsOpressor()) {
-					if (local->CarPtr->OpressorMisiles != 45)
-						local->CarPtr->OpressorMisiles = 45;
+				if (UserSettings.InfiniteMissiles && !ShowMenu) {
+					if (E.IsOpressor() || E.HaveMissiles()) {
+						if (E.IsOpressor()) {
+							if (local->CarPtr->OpressorMisiles != 45)
+								local->CarPtr->OpressorMisiles = 45;
+						}
+						if (E.HaveMissiles()) {
+							if (local->CarPtr->Misiles != 45)
+								local->CarPtr->Misiles = 45;
+						}
+					}
 				}
 			}
 		}
