@@ -73,8 +73,8 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 		char sig1[] = "\x41\x81\xE8\x00\x00\x00\x00\x0F\x84\x00\x00\x00\x00\xB8";
 		char mask1[] = "xxx????xx????x";
 		BoneFunc = FindPattern(modulename, sig1, mask1);
-		PatchAddr = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x1028DEE;
-		PatchAddr1 = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x1022449;
+		PatchAddr = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x105286A;
+		PatchAddr1 = (DWORD64)GetModuleHandleA("GTA5.exe") + 0x104BED1;
 		if (BoneFunc != NULL && PatchAddr != NULL && PatchAddr1 != NULL) {
 			hooked = true;
 		}
