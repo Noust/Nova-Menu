@@ -79,7 +79,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		if (UserSettings.Aimbot && !OnPause()) {
 			Closest = FindClosestEnemy();
 		}
@@ -96,7 +96,7 @@ Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
 
 
 DWORD WINAPI Aimbot(HMODULE hMod) {
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		if (UserSettings.Aimbot && hooked && !OnPause() && !ShowMenu) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
 				int64_t EntityAddr = E.GetEntity(Closest);
@@ -765,17 +765,17 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					UserSettings.ShowMissiles = false;
 					UserSettings.carGravity = 79.0f;
 				}
-				else {
-					UserSettings.InfiniteMissiles = true;
-					UserSettings.ShowMissiles = true;
-					UserSettings.carGravity = 9.800000191f;
-				}
 				if (!E.HaveMissiles()) {
 					UserSettings.InfiniteMissiles = false;
 					UserSettings.ShowMissiles = false;
 					UserSettings.carGravity = 79.0f;
 				}
-				else {
+				if (E.IsOpressor()) {
+					UserSettings.InfiniteMissiles = true;
+					UserSettings.ShowMissiles = true;
+					UserSettings.carGravity = 9.800000191f;
+				}
+				if (E.HaveMissiles()) {
 					UserSettings.InfiniteMissiles = true;
 					UserSettings.ShowMissiles = true;
 					UserSettings.carGravity = 9.800000191f;
@@ -1082,7 +1082,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_NUMPAD1)) {
+	while (!GetAsyncKeyState(VK_DELETE)) {
 		Sleep(500);
 	}
 	if (PatchAddr != NULL && PatchAddr1 != NULL) {
