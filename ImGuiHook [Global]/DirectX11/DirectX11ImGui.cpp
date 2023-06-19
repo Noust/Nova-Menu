@@ -773,7 +773,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				if (E.IsOpressor()) {
 					UserSettings.InfiniteMissiles = true;
 					UserSettings.ShowMissiles = true;
-					UserSettings.carGravity = 9.800000191f;
+					UserSettings.carGravity = 11.800000191f;
 				}
 				if (E.HaveMissiles()) {
 					UserSettings.InfiniteMissiles = true;
