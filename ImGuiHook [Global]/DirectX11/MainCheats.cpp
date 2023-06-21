@@ -4,7 +4,7 @@ bool initiate1 = false;
 
 DWORD WINAPI SetValues(HMODULE hMod) {
 	Entity E;
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!destruct) {
 		if (hooked) {
 			local = (Entitys*)(E.GetLocalPlayer());
 			if (local != 0 && !OnPause()) {

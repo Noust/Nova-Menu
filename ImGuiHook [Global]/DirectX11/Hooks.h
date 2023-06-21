@@ -2,6 +2,7 @@
 bool hooked = false;
 DWORD64 PatchAddr;
 DWORD64 PatchAddr1;
+bool destruct = false;
 
 class Entitys
 {

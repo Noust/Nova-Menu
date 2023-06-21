@@ -79,7 +79,7 @@ DWORD WINAPI InitiateHooks(HMODULE hMod) {
 			hooked = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!destruct) {
 		if (UserSettings.Aimbot && !OnPause()) {
 			Closest = FindClosestEnemy();
 		}
@@ -96,7 +96,7 @@ Vector2 GetBonePos(int64_t EntityAddr, int32_t mask) {
 
 
 DWORD WINAPI Aimbot(HMODULE hMod) {
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!destruct) {
 		if (UserSettings.Aimbot && hooked && !OnPause() && !ShowMenu) {
 			if (GetAsyncKeyState(VK_RBUTTON)) {
 				int64_t EntityAddr = E.GetEntity(Closest);
@@ -378,8 +378,11 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				}
 			}
 			if (ImGui::Button("Max Health")) {
+				local->Health = local->MaxHealth;
+			}
+			if (ImGui::Button("Insta Kill")) {
 				if (E.CarExist()) {
-					local->Health = local->MaxHealth;
+					local->Health = 0;
 				}
 			}
 			ImGui::Checkbox("Custom Values", &UserSettings.CustomValues);
@@ -781,6 +784,8 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 					UserSettings.carGravity = 9.800000191f;
 				}
 			}
+			if (ImGui::Button("UnHook"))
+				destruct = true;
 		}
 		ImGui::EndChild();
 		ImGui::End();
@@ -1082,7 +1087,7 @@ DWORD WINAPI MainThread(HMODULE hMod) {
 			InitHook = true;
 		}
 	}
-	while (!GetAsyncKeyState(VK_DELETE)) {
+	while (!destruct) {
 		Sleep(500);
 	}
 	if (PatchAddr != NULL && PatchAddr1 != NULL) {
