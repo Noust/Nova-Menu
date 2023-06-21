@@ -381,9 +381,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				local->Health = local->MaxHealth;
 			}
 			if (ImGui::Button("Insta Kill")) {
-				if (E.CarExist()) {
-					local->Health = 0;
-				}
+				local->Health = 0;
 			}
 			ImGui::Checkbox("Custom Values", &UserSettings.CustomValues);
 			if (UserSettings.CustomValues) {
