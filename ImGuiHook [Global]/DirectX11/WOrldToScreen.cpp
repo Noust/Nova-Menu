@@ -2,13 +2,14 @@
 
 bool WorldToScreen(Vector4 pos, float matrix[16], Vector2& posscreen) {
 	Vector4 clc;
-	clc.x = pos.x * matrix[0] + pos.y * matrix[4] + pos.z * matrix[8] + matrix[12];
-	clc.y = pos.x * matrix[1] + pos.y * matrix[5] + pos.z * matrix[9] + matrix[13];
-	clc.z = pos.x * matrix[2] + pos.y * matrix[6] + pos.z * matrix[10] + matrix[14];
 	clc.w = pos.x * matrix[3] + pos.y * matrix[7] + pos.z * matrix[11] + matrix[15];
 
 	if (clc.w < 0.1f)
 		return false;
+
+	clc.x = pos.x * matrix[0] + pos.y * matrix[4] + pos.z * matrix[8] + matrix[12];
+	clc.y = pos.x * matrix[1] + pos.y * matrix[5] + pos.z * matrix[9] + matrix[13];
+	clc.z = pos.x * matrix[2] + pos.y * matrix[6] + pos.z * matrix[10] + matrix[14];
 
 	Vector3 N;
 	N.x = clc.x / clc.w;

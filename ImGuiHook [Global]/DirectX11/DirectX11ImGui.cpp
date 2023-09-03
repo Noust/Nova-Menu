@@ -213,6 +213,13 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 				ImGui::SliderFloat("Box Width", &UserSettings.BoxWidth, 0, 1);
 				ImGui::Separator();
 			}
+			ImGui::Checkbox("Corner Box Esp", &UserSettings.CornerBoxEsp);
+			if (UserSettings.CornerBoxEsp) {
+				ImGui::ColorEdit4("Corner Box Player Color", (float*)(&UserSettings.PlayerCornerBoxColor));
+				ImGui::ColorEdit4("Corner Box NPC Color", (float*)(&UserSettings.NPCCornerBoxColor));
+				ImGui::SliderInt("Corner Box thickness", &UserSettings.CornerBoxThickness, 0, 10);
+				ImGui::Separator();
+			}
 			ImGui::Checkbox("Filled Box ESP", &UserSettings.FilledESP);
 			if (UserSettings.FilledESP) {
 				ImGui::ColorEdit4("Enemies Filled Box Color", (float*)(&UserSettings.NPCFilledColor));
@@ -716,6 +723,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		if (UserSettings.MenuWindow == 3) {
 			if (ImGui::Button("Disable All")) {
 				UserSettings.FilledESP = false;
+				UserSettings.CornerBoxEsp = false;
 				UserSettings.FilledCircle = false;
 				UserSettings.CustomValues = false;
 				UserSettings.NoRadgoll = false;
@@ -749,6 +757,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 			}
 			if (ImGui::Button("Best Configuration")) {
 				UserSettings.FilledESP = true;
+				UserSettings.CornerBoxEsp = true;
 				UserSettings.CustomValues = true;
 				UserSettings.NoRadgoll = true;
 				UserSettings.Godmode = true;
@@ -789,7 +798,7 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 		ImGui::End();
 	}
 	if (hooked && !OnPause()) {
-		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name || UserSettings.FilledESP) {
+		if (UserSettings.BoneEsp || UserSettings.BoxEsp || UserSettings.Esp3d || UserSettings.SnapLine || UserSettings.Type || UserSettings.Distance || UserSettings.HP || UserSettings.Name || UserSettings.FilledESP || UserSettings.CornerBoxEsp) {
 			for (int i = 0; i < E.GetMaxEntities(); i++) {
 				int64_t EntityAddr = E.GetEntity(i);
 				ents = (Entitys*)(EntityAddr);
@@ -852,6 +861,16 @@ HRESULT APIENTRY MJPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 										DrawLine(Lfootback, Lfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
 										DrawLine(Rfootback, Rfootfront, UserSettings.PlayerBoneColor, UserSettings.BoneThickness);
 										DrawCircle(head, UserSettings.PlayerBoneColor, (neck.y - head.y) + 2, UserSettings.BoneThickness);
+									}
+								}
+							}
+							if (UserSettings.CornerBoxEsp) {
+								if (posscreen.x > 0 && posscreen.y > 0 && posscreen.x < 1920 && posscreen.y < 1080) {
+									if (maxhealth > 11 && maxhealth < 201) {
+										DrawCornerEsp(heigth / 2, heigth, posscreen, UserSettings.NPCCornerBoxColor, UserSettings.CornerBoxThickness);
+									}
+									if (maxhealth > 201 && maxhealth < 999) {
+										DrawCornerEsp(heigth / 2, heigth, posscreen, UserSettings.PlayerCornerBoxColor, UserSettings.CornerBoxThickness);
 									}
 								}
 							}

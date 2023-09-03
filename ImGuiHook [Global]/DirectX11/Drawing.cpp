@@ -80,3 +80,18 @@ void DrawCircle(Vector2 pos, ImColor color, float radius, int thickness) {
 void DrawFilledRect(Vector2 pos, float heigth, float Width, ImColor color) {
 	ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(pos.x - Width / 2, pos.y), ImVec2(pos.x + Width / 2, pos.y - heigth), color, 0);
 }
+
+void DrawCornerEsp(float W, float H, Vector2 pos, ImColor color, int thickness) {
+	float lineW = (W / 5);
+	float lineH = (H / 6);
+
+	//outline
+	DrawLine({ pos.x - W / 2, pos.y - H }, { pos.x - W / 2 + lineW, pos.y - H }, color, thickness);//top left
+	DrawLine({ pos.x - W / 2, pos.y - H }, { pos.x - W / 2, pos.y - H + lineH }, color, thickness);
+	DrawLine({ pos.x - W / 2, pos.y - lineH }, { pos.x - W / 2, pos.y }, color, thickness); //bot left
+	DrawLine({ pos.x - W / 2, pos.y }, { pos.x - W / 2 + lineW, pos.y }, color, thickness);
+	DrawLine({ pos.x + W / 2 - lineW, pos.y - H }, { pos.x + W / 2, pos.y - H }, color, thickness); // top right
+	DrawLine({ pos.x + W / 2, pos.y - H }, { pos.x + W / 2, pos.y - H + lineH }, color, thickness);
+	DrawLine({ pos.x + W / 2, pos.y - lineH }, { pos.x + W / 2, pos.y }, color, thickness); // bot right
+	DrawLine({ pos.x + W / 2 - lineW, pos.y }, { pos.x + W / 2, pos.y }, color, thickness);
+}

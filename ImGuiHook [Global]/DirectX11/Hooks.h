@@ -1,4 +1,5 @@
 #pragma once
+#include "Include.h"
 bool hooked = false;
 DWORD64 PatchAddr;
 DWORD64 PatchAddr1;

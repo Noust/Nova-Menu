@@ -15,6 +15,11 @@ public:
 	ImColor NPCBoxColor = { 0, 255, 0 };
 	float BoxWidth = 0.5f;
 
+	bool CornerBoxEsp = false;
+	int CornerBoxThickness = 0;
+	ImColor PlayerCornerBoxColor = { 0,0,255 };
+	ImColor NPCCornerBoxColor = { 0, 255, 0 };
+
 	bool Esp3d = false;
 	int Thickness3d = 0;
 	ImColor Player3dColor = { 0,0,255 };
